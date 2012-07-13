@@ -17,6 +17,7 @@
     package org.xmlcml.html;
 
 import java.io.IOException;
+
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -29,6 +30,7 @@ import nu.xom.Node;
 import nu.xom.Nodes;
 
 import org.apache.log4j.Logger;
+
 import org.xmlcml.cml.base.CMLConstants;
 import org.xmlcml.cml.base.CMLUtil;
 

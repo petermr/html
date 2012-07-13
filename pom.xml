@@ -11,11 +11,11 @@
 	</parent>
 
 	<groupId>org.xml-cml</groupId>
-	<artifactId>svg</artifactId>
-	<version>6.1-SNAPSHOT</version>
+	<artifactId>html</artifactId>
+	<version>0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
-	<name>SVG</name>
-	<description>A Java library for processing SVG</description>
+	<name>HTML</name>
+	<description>A Java library for processing HTML</description>
 
 	<licenses>
 		<license>
@@ -25,9 +25,9 @@
 		</license>
 	</licenses>
 	<scm>
-		<url>https://bitbucket.org/wwmm/svg/src</url>
-		<connection>scm:hg:http://bitbucket.org/wwmm/svg</connection>
-		<developerConnection>scm:hg:https://bitbucket.org/wwmm/svg</developerConnection>
+		<url>https://bitbucket.org/wwmm/html/src</url>
+		<connection>scm:hg:http://bitbucket.org/wwmm/html</connection>
+		<developerConnection>scm:hg:https://bitbucket.org/wwmm/html</developerConnection>
 	</scm>
 
 	<developers>
@@ -40,7 +40,7 @@
 	<inceptionYear>2007</inceptionYear>
 	<ciManagement>
 		<system>hudson</system>
-		<url>http://hudson.ch.cam.ac.uk/job/svg</url>
+		<url>http://hudson.ch.cam.ac.uk/job/html</url>
 	</ciManagement>
 
 	<organization>
