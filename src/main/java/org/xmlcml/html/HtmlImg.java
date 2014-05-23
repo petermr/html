@@ -26,9 +26,11 @@ import org.apache.log4j.Logger;
  *
  */
 public class HtmlImg extends HtmlElement {
-	private static final String SRC = "src";
+
 	private final static Logger LOG = Logger.getLogger(HtmlImg.class);
 	public final static String TAG = "img";
+	private static final String ALT = "alt";
+	private static final String SRC = "src";
 
 	/** constructor.
 	 * 
@@ -37,6 +39,14 @@ public class HtmlImg extends HtmlElement {
 		super(TAG);
 	}
 
+	public void setAlt(String src) {
+		this.addAttribute(new Attribute(ALT, src));
+	}
+
+	public String getAlt() {
+		return this.getAttributeValue(ALT);
+	}
+	
 	public void setSrc(String src) {
 		this.addAttribute(new Attribute(SRC, src));
 	}

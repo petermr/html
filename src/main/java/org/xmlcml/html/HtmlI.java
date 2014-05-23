@@ -16,7 +16,11 @@
 
 package org.xmlcml.html;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.log4j.Logger;
+import org.xmlcml.html.util.HtmlUtil;
 
 
 /** 
@@ -25,11 +29,36 @@ import org.apache.log4j.Logger;
 public class HtmlI extends HtmlElement {
 	private final static Logger LOG = Logger.getLogger(HtmlSpan.class);
 	public final static String TAG = "i";
+	public final static String ALL_I_XPATH = ".//h:i";
 
 	/** constructor.
 	 * 
 	 */
 	public HtmlI() {
 		super(TAG);
+	}
+
+	/** convenience method to extract list of HtmlI in element
+	 * 
+	 * @param htmlElement
+	 * @return
+	 */
+	public static List<HtmlI> extractSelfAndDescendantIs(HtmlElement htmlElement) {
+		return HtmlI.extractIs(HtmlUtil.getQueryHtmlElements(htmlElement, ALL_I_XPATH));
+	}
+
+	/** makes a new list composed of the is in the list
+	 * 
+	 * @param elements
+	 * @return
+	 */
+	public static List<HtmlI> extractIs(List<HtmlElement> elements) {
+		List<HtmlI> iList = new ArrayList<HtmlI>();
+		for (HtmlElement element : elements) {
+			if (element instanceof HtmlI) {
+				iList.add((HtmlI) element);
+			}
+		}
+		return iList;
 	}
 }

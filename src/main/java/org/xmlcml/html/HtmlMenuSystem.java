@@ -26,9 +26,9 @@ import nu.xom.Document;
 import nu.xom.Elements;
 
 import org.apache.log4j.Logger;
-import org.xmlcml.cml.base.CMLConstants;
-import org.xmlcml.cml.base.CMLUtil;
 import org.xmlcml.html.HtmlElement.Target;
+import org.xmlcml.xml.XMLConstants;
+import org.xmlcml.xml.XMLUtil;
 
 
 /** base class for lightweight generic SVG element.
@@ -106,22 +106,22 @@ public class HtmlMenuSystem {
 
 	private HtmlHtml readElement(File dir, String filename) {
 		File file = new File(dir, filename);
-		Document document = CMLUtil.parseQuietlyToDocument(file);
+		Document document = XMLUtil.parseQuietlyToDocument(file);
 		return (document == null || !(document.getRootElement() instanceof HtmlHtml)) ? null 
 				: (HtmlHtml) document.getRootElement();
 
 	}
 
 	private String createBottomFilename() {
-		return bottomRootName+CMLConstants.S_PERIOD+htmlSuffix;
+		return bottomRootName+XMLConstants.S_PERIOD+htmlSuffix;
 	}
 
 	private String createIndexFrameFilename() {
-		return indexFrameRootName+CMLConstants.S_PERIOD+htmlSuffix;
+		return indexFrameRootName+XMLConstants.S_PERIOD+htmlSuffix;
 	}
 
 	private String createMenuFilename() {
-		return menuRootName+CMLConstants.S_PERIOD+htmlSuffix;
+		return menuRootName+XMLConstants.S_PERIOD+htmlSuffix;
 	}
 
 	private void makeBottom() {
@@ -200,13 +200,13 @@ public class HtmlMenuSystem {
 
 	public void outputMenuAndBottomAndIndexFrame() throws IOException {
 		FileOutputStream fos = new FileOutputStream(menuFilename);
-		CMLUtil.debug(menu, fos, 1);
+		XMLUtil.debug(menu, fos, 1);
 		fos.close();
 		fos = new FileOutputStream(indexFrameFilename);
-		CMLUtil.debug(indexFrame, fos, 1);
+		XMLUtil.debug(indexFrame, fos, 1);
 		fos.close();
 		fos = new FileOutputStream(bottomFilename);
-		CMLUtil.debug(bottom, fos, 1);
+		XMLUtil.debug(bottom, fos, 1);
 		fos.close();
 	}
 

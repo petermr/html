@@ -16,7 +16,11 @@
 
 package org.xmlcml.html;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.log4j.Logger;
+import org.xmlcml.html.util.HtmlUtil;
 
 
 /** base class for lightweight generic SVG element.
@@ -27,11 +31,36 @@ import org.apache.log4j.Logger;
 public class HtmlDiv extends HtmlElement {
 	private final static Logger LOG = Logger.getLogger(HtmlDiv.class);
 	public final static String TAG = "div";
+	public final static String ALL_DIV_XPATH = ".//h:div";
 
 	/** constructor.
 	 * 
 	 */
 	public HtmlDiv() {
 		super(TAG);
+	}
+
+	/** makes a new list composed of the divs in the list
+	 * 
+	 * @param elements
+	 * @return
+	 */
+	public static List<HtmlDiv> extractDivs(List<HtmlElement> elements) {
+		List<HtmlDiv> divList = new ArrayList<HtmlDiv>();
+		for (HtmlElement element : elements) {
+			if (element instanceof HtmlDiv) {
+				divList.add((HtmlDiv) element);
+			}
+		}
+		return divList;
+	}
+
+	/** convenience method to extract list of HtmlDiv in element
+	 * 
+	 * @param htmlElement
+	 * @return
+	 */
+	public static List<HtmlDiv> extractSelfAndDescendantIs(HtmlElement htmlElement) {
+		return HtmlDiv.extractDivs(HtmlUtil.getQueryHtmlElements(htmlElement, ALL_DIV_XPATH));
 	}
 }

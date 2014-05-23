@@ -16,7 +16,11 @@
 
 package org.xmlcml.html;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.log4j.Logger;
+import org.xmlcml.html.util.HtmlUtil;
 
 
 /** base class for lightweight generic SVG element.
@@ -28,6 +32,8 @@ public class HtmlBody extends HtmlElement {
 
 	private final static Logger LOG = Logger.getLogger(HtmlBody.class);
 	public final static String TAG = "body";
+	public final static String ALL_BODY_XPATH = ".//h:body";
+	
 	/** constructor.
 	 * 
 	 */
@@ -35,5 +41,33 @@ public class HtmlBody extends HtmlElement {
 		super(TAG);
 	}
 
-	
+	/** convenience method to extract list of HtmlBody in element
+	 * 
+	 * @param htmlElement
+	 * @return
+	 */
+	public static List<HtmlBody> extractSelfAndDescendantBodys(HtmlElement htmlElement) {
+		return HtmlBody.extractBodys(HtmlUtil.getQueryHtmlElements(htmlElement, ALL_BODY_XPATH));
+	}
+
+	/** makes a new list composed of the Bodys in the list
+	 * 
+	 * @param elements
+	 * @return
+	 */
+	public static List<HtmlBody> extractBodys(List<HtmlElement> elements) {
+		List<HtmlBody> BodyList = new ArrayList<HtmlBody>();
+		for (HtmlElement element : elements) {
+			if (element instanceof HtmlBody) {
+				BodyList.add((HtmlBody) element);
+			}
+		}
+		return BodyList;
+	}
+
+	public static HtmlBody getFirstDescendantBody(HtmlElement htmlElement) {
+		List<HtmlBody> bodys = extractSelfAndDescendantBodys(htmlElement);
+		return (bodys.size() == 0) ? null : bodys.get(0);
+	}
+
 }

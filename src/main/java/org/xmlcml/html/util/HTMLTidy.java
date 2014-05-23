@@ -2,6 +2,7 @@ package org.xmlcml.html.util;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -10,11 +11,41 @@ import java.util.List;
 import nu.xom.Document;
 import nu.xom.Element;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.log4j.Logger;
+import org.joda.time.DateTime;
 import org.w3c.tidy.Tidy;
-import org.xmlcml.cml.base.CMLUtil;
+import org.xmlcml.html.HtmlElement;
+import org.xmlcml.xml.XMLUtil;
 
+/** wraps HTMLTidy and provides more options.
+ * 
+ * @author pm286
+ *
+ */
 public class HTMLTidy {
+	
+	private static final String DOCTYPE_REGEX = "<!DOCTYPE[^>]*>";
+	private static final String NEWLINE_REGEX = "[\\r\\n]+";
+	private static final String WHITESPACE = "[\\r\\n\\t]+";
+	private static final String ENDTAG_PREFIX = "(</[A-Za-z_][A-Za-z_0-9]*:)";
+	private static final String STARTTAG_PREFIX = "(<[A-Za-z_][A-Za-z_0-9]*:)";
+	private final static Logger LOG = Logger.getLogger(HTMLTidy.class);
+	private Tidy tidy;
+	private List<HTMLTagReplacement> tagReplacementList;
+	private ByteArrayOutputStream baos;
+	private org.w3c.tidy.Node node;
+	private boolean stripDoctype;
+	private boolean removeXMLLang;
+	private boolean flattenNewline;
+	private boolean removeForeignPrefixes;
+
+	public HTMLTidy() {
+		tidy = createTidyWithOptions();
+		this.setCommonDefaults();
+	}
+	
 	/**
 	 * reads HTML in inputStream and tidies it.
 	 * First with HTML tidy (using as many cleaning options as possible
@@ -30,63 +61,149 @@ public class HTMLTidy {
 		if (inputStream == null) {
 			throw new RuntimeException("Null input for HTMLTidy");
 		}
-		List<String> lines = IOUtils.readLines(inputStream);
-    	lines = preTidy(lines);
+		byte[] bytesin = IOUtils.toByteArray(inputStream);
     	Tidy tidy = createTidyWithOptions();
-    	inputStream = createInputStream(lines);
+    	ByteArrayInputStream bais = new ByteArrayInputStream(bytesin);
     	ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    	tidy.parse(inputStream, baos);
-    	baos.close();
+    	// FIXME
+    	org.w3c.tidy.Node doc = tidy.parse(bais, baos);
+    	byte[] bytes = baos.toByteArray();
+    	LOG.debug("made bytes: "+bytes.length);
     	Document document = null;
-    	String baosS0 = ""+new String(baos.toByteArray());
-    	if (baosS0.length() > 0) {
-    		document = CMLUtil.stripDTDAndOtherProblematicXMLHeadings(baosS0);
+    	try {
+    		FileUtils.writeByteArrayToFile(new File("target/htmlIn"+new DateTime().getMillisOfDay()+".html"), bytes);
+    		ByteArrayInputStream bais1 = new ByteArrayInputStream(bytes);
+        	LOG.debug("parsing...");
+    		document = XMLUtil.parseQuietlyToDocument(bais1);
+        	LOG.debug("parsed bytes");
+    	} catch (RuntimeException e) {
+    		FileUtils.writeByteArrayToFile(new File("target/badhtmlIn"+new DateTime().getMillisOfDay()+".html"), bytesin);
+    		FileUtils.writeByteArrayToFile(new File("target/badhtml"+new DateTime().getMillisOfDay()+".html"), bytes);
+    		throw e;
     	}
+//    	baos.close();
+//    	Document document = null;
+//    	String baosS0 = ""+new String(baos.toByteArray());
+//    	if (baosS0.length() > 0) {
+//    		document = XMLUtil.stripDTDAndOtherProblematicXMLHeadings(baosS0);
+//    	}
     	return document;
     }
 
-	private static InputStream createInputStream(List<String> lines) {
-		StringBuilder sb = new StringBuilder();
-		for (String line : lines) {
-			sb.append(line+" ");
+	public static String tidyWhitespaceAndForeignNamePrefixesAndLang(String content) {
+		String content0 = HTMLTidy.removeLangXMLLang(content);
+		if (!content0.equals(content)) {
+			LOG.trace("tidied xml:lang");
 		}
-		ByteArrayInputStream bais = new ByteArrayInputStream(sb.toString().getBytes());
-		return bais;
+		String content1 = HTMLTidy.normalizeWhitespace(content0);
+		if (!content1.equals(content0)) {
+			LOG.trace("tidied whitespace");
+		}
+		String contentx = HTMLTidy.removeDTD(content1);
+		if (!content1.equals(contentx)) {
+			LOG.trace("stripped DTD");
+		}
+		String content2 = HTMLTidy.removeForeignNamespacePrefixes(contentx);
+		if (!content1.equals(content2)) {
+			LOG.trace("removed namespacePrefixes");
+		}
+		return content2;
 	}
 
-	private static List<String> preTidy(List<String> lines) {
-		List<String> outLines = new ArrayList<String>();
-		for (String line : lines) {
-			String outLine = replaceBadTags(line, "it", "i");
-			outLines.add(outLine);
-		}
-		return outLines;
+	private static String removeLangXMLLang(String content) {
+		String content1 = content.replaceAll("xml\\:lang\\s*=\\s*\\\"([^\\\"]*)\\\"", ""); // xml:lang
+		return content1;
 	}
 
-	private static ByteArrayOutputStream preTidy(ByteArrayOutputStream baos) {
-		byte[] ba = baos.toByteArray();
-		String s = new String(ba);
-		System.out.println(ba.length+" "+s);
-		int i = 0;
-		while (i != -1) {
-			i = s.indexOf("it", i);
-			System.out.println(">> "+s.substring(Math.max(0, i-5), Math.min(s.length(), i+10)));
-		}
-		s = replaceBadTags(s, "it", "i");
-		baos = new ByteArrayOutputStream();
-		try {
-			baos.write(s.getBytes());
-		} catch (IOException e) {
-			throw new RuntimeException("Cannot write BAOS in HTMLTidy", e);
-		}
-		return baos;
+	private static String removeForeignNamespacePrefixes(String content) {
+		String content1 = content.replaceAll(STARTTAG_PREFIX, "<_"); // <xyz: ... />
+		String content2 = content1.replaceAll(ENDTAG_PREFIX, "</_"); // </xyz: ... />
+		return content2;
 	}
 
-	private static String replaceBadTags(String s, String tag, String newTag) {
-		s = s.replaceAll("<"+tag+">", "<"+newTag+">");
-		s = s.replaceAll("</"+tag+">", "</"+newTag+">");
+	private static String normalizeWhitespace(String content) {
+		content = content.replaceAll(WHITESPACE, " ");
+		return content;
+	}
+
+	private static String flattenNewline(String content) {
+		content = content.replaceAll(NEWLINE_REGEX, "");
+		return content;
+	}
+
+	private static String removeDTD(String content) {
+		content = content.replaceAll(DOCTYPE_REGEX, "");
+		return content;
+	}
+
+	private void preTidy(StringBuilder sb) {
+		if (tagReplacementList != null) {
+			for (HTMLTagReplacement tagReplacement : tagReplacementList) {
+				tagReplacement.replaceAll(sb);
+			}
+		}
+		if (stripDoctype) {
+			stripDoctype(sb);
+		}
+		if (removeXMLLang || flattenNewline || removeForeignPrefixes) {
+			String s = sb.toString();
+			if (removeXMLLang) {
+				s = HTMLTidy.removeLangXMLLang(s);
+			}
+			if (flattenNewline) {
+				s = HTMLTidy.flattenNewline(s);
+			}
+			if (removeForeignPrefixes) {
+				s = HTMLTidy.removeForeignNamespacePrefixes(s);
+			}
+			sb.replace(0, sb.length(), s);
+		}
+	}
+	
+
+	public boolean isRemoveForeignPrefixes() {
+		return removeForeignPrefixes;
+	}
+
+	public void setRemoveForeignPrefixes(boolean removeForeignPrefixes) {
+		this.removeForeignPrefixes = removeForeignPrefixes;
+	}
+
+	public void setStripDoctype(boolean stripDoctype) {
+		this.stripDoctype = stripDoctype;
+	}
+
+	public void setRemoveXMLLang(boolean removeXMLLang) {
+		this.removeXMLLang = removeXMLLang;
+	}
+
+	public void setFlattenNewline(boolean flattenNewline) {
+		this.flattenNewline = flattenNewline;
+	}
+
+	public static void stripDoctype(StringBuilder sb) {
+		int idx0 = sb.indexOf("<!DOCTYPE");
+		if (idx0 != -1) {
+			int idx1 = sb.indexOf(">", idx0); 
+			if (idx1 == -1) {
+				throw new RuntimeException("Bad DOCTYPE at: "+idx0);
+			}
+			sb.delete(idx0, idx1 + 1);
+		}
+	}
+
+	/** crude method to change tags.
+	 * e.g. <foo>...</foo> => <span>...</span>; <foo/> => <span/>; will strip attributes.
+	 * 
+	 */
+	
+	public static String replaceBadTags(String s, String tag, String newTag) {
+		s = s.replaceAll("<"+tag+"[^>]*>", "<"+newTag+">");
+		s = s.replaceAll("<"+tag+"[^>/]*/>", "<"+newTag+"/>");
+		s = s.replaceAll("</"+tag+"\\s*>", "</"+newTag+">");
 		return s;
 	}
+
 
 	private static Tidy createTidyWithOptions() {
 		Tidy tidy = new Tidy();
@@ -116,5 +233,71 @@ public class HTMLTidy {
 			throw new RuntimeException("parse: "+e);
 		}
 		return element;
+	}
+
+	public String tidy(InputStream is) throws IOException {
+		StringBuilder sb = new StringBuilder(IOUtils.toString(is));
+		preTidy(sb);
+		is = IOUtils.toInputStream(sb.toString());
+		baos = new ByteArrayOutputStream();
+		node = tidy.parse(is, baos);
+		sb = new StringBuilder(baos.toString());
+		// currently postTidy repeats preTidy()
+		postTidy(sb);
+		String out = sb.toString();
+		LOG.trace("SB "+out);
+		baos = new ByteArrayOutputStream();
+		IOUtils.write(out.getBytes(), baos);
+		return out;
+	}
+	
+	public HtmlElement createHtmlElement(InputStream is) throws Exception {
+		String out = tidy(is);
+		return (out == null || out.trim() == "") ? null : HtmlUtil.readAndCreateElement(is);
+	}
+	
+	private void postTidy(StringBuilder sb) {
+		preTidy(sb);
+	}
+
+	public void addTagReplacement(HTMLTagReplacement tagReplacement) {
+		if (tagReplacementList == null) {
+			tagReplacementList = new ArrayList<HTMLTagReplacement>();
+		}
+		tagReplacementList.add(tagReplacement);
+	}
+	
+	public void deleteTag(String old) {
+		addTagReplacement(new HTMLTagReplacement(old));
+	}
+	
+	public void replacetag(String old, String newTag) {
+		addTagReplacement(new HTMLTagReplacement(old, newTag));
+	}
+	
+	public void seStripDoctype(boolean b) {
+		this.stripDoctype = b;
+	}
+	
+	public org.w3c.tidy.Node getNode() {
+		return node;
+	}
+	
+	public ByteArrayOutputStream getByteArrayOutputStream() {
+		return baos;
+	}
+	
+	public String getOutputString() {
+		return baos == null ? null : baos.toString();
+	}
+	
+	public Tidy getTidy() {
+		return tidy;
+	}
+
+	public void setCommonDefaults() {
+		setStripDoctype(true);
+		getTidy().setDocType(null);
+		setFlattenNewline(true);
 	}
 }

@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.xmlcml.html.util.HtmlUtil;
 
 
 /** base class for lightweight generic SVG element.
@@ -31,6 +32,7 @@ public class HtmlTr extends HtmlElement {
 	@SuppressWarnings("unused")
 	private final static Logger LOG = Logger.getLogger(HtmlTr.class);
 	public final static String TAG = "tr";
+	public final static String ALL_TR_XPATH = ".//h:tr";
 
 	/** constructor.
 	 * 
@@ -65,6 +67,35 @@ public class HtmlTr extends HtmlElement {
 	public HtmlTh getTh(int col) {
 		List<HtmlTh> cells = getThChildren();
 		return (col < 0 || col >= cells.size()) ? null : (HtmlTh) cells.get(col);
+	}
+
+	/** convenience method to extract list of HtmlTr in element
+	 * 
+	 * @param htmlElement
+	 * @return
+	 */
+	public static List<HtmlTr> extractSelfAndDescendantTrs(HtmlElement htmlElement) {
+		return HtmlTr.extractTrs(HtmlUtil.getQueryHtmlElements(htmlElement, ALL_TR_XPATH));
+	}
+
+	/** makes a new list composed of the trs in the list
+	 * 
+	 * @param elements
+	 * @return
+	 */
+	public static List<HtmlTr> extractTrs(List<HtmlElement> elements) {
+		List<HtmlTr> trList = new ArrayList<HtmlTr>();
+		for (HtmlElement element : elements) {
+			if (element instanceof HtmlTr) {
+				trList.add((HtmlTr) element);
+			}
+		}
+		return trList;
+	}
+	
+	public static HtmlTr getFirstDescendantTr(HtmlElement htmlElement) {
+		List<HtmlTr> trs = extractSelfAndDescendantTrs(htmlElement);
+		return (trs.size() == 0) ? null : trs.get(0);
 	}
 
 }

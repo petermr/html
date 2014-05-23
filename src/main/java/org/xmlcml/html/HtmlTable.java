@@ -24,6 +24,7 @@ import nu.xom.Element;
 import nu.xom.Nodes;
 
 import org.apache.log4j.Logger;
+import org.xmlcml.html.util.HtmlUtil;
 
 
 /** 
@@ -57,6 +58,7 @@ import org.apache.log4j.Logger;
 public class HtmlTable extends HtmlElement {
 	private final static Logger LOG = Logger.getLogger(HtmlTable.class);
 	public final static String TAG = "table";
+	public final static String ALL_TABLE_XPATH = ".//h:table";
 
 	/** constructor.
 	 * 
@@ -112,17 +114,41 @@ public class HtmlTable extends HtmlElement {
 		return rows;
 	}
 
-	public static HtmlTable getFirstTable(HtmlElement root) {
-		Nodes tableNodes = root.query(".//*[local-name()='table']");
-		return (tableNodes.size() == 0) ? null : (HtmlTable) tableNodes.get(0);
-	}
-
 	public void setBorder(int i) {
 		this.addAttribute(new Attribute("border", ""+i));
 	}
 
 	public void addRow(HtmlTr row) {
 		this.appendChild(row);
+	}
+
+	/** convenience method to extract list of HtmlTable in element
+	 * 
+	 * @param htmlElement
+	 * @return
+	 */
+	public static List<HtmlTable> extractSelfAndDescendantTables(HtmlElement htmlElement) {
+		return HtmlTable.extractTables(HtmlUtil.getQueryHtmlElements(htmlElement, ALL_TABLE_XPATH));
+	}
+
+	/** makes a new list composed of the tables in the list
+	 * 
+	 * @param elements
+	 * @return
+	 */
+	public static List<HtmlTable> extractTables(List<HtmlElement> elements) {
+		List<HtmlTable> tableList = new ArrayList<HtmlTable>();
+		for (HtmlElement element : elements) {
+			if (element instanceof HtmlTable) {
+				tableList.add((HtmlTable) element);
+			}
+		}
+		return tableList;
+	}
+
+	public static HtmlTable getFirstDescendantTable(HtmlElement htmlElement) {
+		List<HtmlTable> tables = extractSelfAndDescendantTables(htmlElement);
+		return (tables.size() == 0) ? null : tables.get(0);
 	}
 
 

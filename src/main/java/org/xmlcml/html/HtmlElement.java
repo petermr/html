@@ -30,9 +30,9 @@ import nu.xom.Node;
 import nu.xom.Nodes;
 
 import org.apache.log4j.Logger;
+import org.xmlcml.xml.XMLConstants;
+import org.xmlcml.xml.XMLUtil;
 
-import org.xmlcml.cml.base.CMLConstants;
-import org.xmlcml.cml.base.CMLUtil;
 
 /*
  Legend: Optional, Forbidden, Empty, Deprecated, Loose DTD, Frameset DTD
@@ -135,9 +135,14 @@ VAR 	  	  	  	  	  	instance of a variable or program argument
  * @author pm286
  *
  */
-public abstract class HtmlElement extends Element implements CMLConstants {
-	private static final String ID = "id";
+public abstract class HtmlElement extends Element implements XMLConstants {
+
 	private final static Logger LOG = Logger.getLogger(HtmlElement.class);
+
+	private static final String NAME = "name";
+	private static final String CLASS = "class";
+	private static final String ID = "id";
+	private static final String TITLE = "title";
 
 	public static String[] tags = {
 		"A", 
@@ -245,6 +250,7 @@ public abstract class HtmlElement extends Element implements CMLConstants {
 		menu,
 		separate;
 	};
+	
 	/** constructor.
 	 * 
 	 * @param name
@@ -253,11 +259,34 @@ public abstract class HtmlElement extends Element implements CMLConstants {
 	public HtmlElement(String name) {
 		super(name, XHTML_NS);
 	}
-	
+
+	/** creates subclassed elements.
+	 * 
+	 * fails on error.
+	 * @param element
+	 * @return
+	 */
 	public static HtmlElement create(Element element) {
+		return HtmlElement.create(element, false);
+	}
+		
+	/** creates subclassed elements.
+	 * 
+	 * if an error is encountered and abort = false, outputs message and
+	 * continues, else fails;
+	 * 
+	 * @param element
+	 * @param abort 
+	 * @return
+	 */
+	public static HtmlElement create(Element element, boolean abort) {
 		HtmlElement htmlElement = null;
 		String tag = element.getLocalName();
-		if(HtmlA.TAG.equalsIgnoreCase(tag)) {
+		String namespaceURI = element.getNamespaceURI();
+		if (!XHTML_NS.equals(namespaceURI)) {
+			// might be SVG
+			throw new RuntimeException("Multiple Namespaces NYI "+namespaceURI);
+		} else if(HtmlA.TAG.equalsIgnoreCase(tag)) {
 			htmlElement = new HtmlA();
 		} else if(HtmlB.TAG.equalsIgnoreCase(tag)) {
 			htmlElement = new HtmlB();
@@ -271,6 +300,8 @@ public abstract class HtmlElement extends Element implements CMLConstants {
 			htmlElement = new HtmlCaption();
 		} else if(HtmlDiv.TAG.equalsIgnoreCase(tag)) {
 			htmlElement = new HtmlDiv();
+		} else if(HtmlEm.TAG.equalsIgnoreCase(tag)) {
+			htmlElement = new HtmlEm();
 		} else if(HtmlFrame.TAG.equalsIgnoreCase(tag)) {
 			htmlElement = new HtmlFrame();
 		} else if(HtmlFrameset.TAG.equalsIgnoreCase(tag)) {
@@ -336,9 +367,14 @@ public abstract class HtmlElement extends Element implements CMLConstants {
 		} else if (TAGSET.contains(tag.toUpperCase())) {
 			htmlElement = new HtmlGeneric(tag.toLowerCase());
 		} else {
-			throw new RuntimeException("Unknown html tag "+tag);
+			String msg = "Unknown html tag "+tag;
+			if (abort) {
+				throw new RuntimeException(msg);
+			}
+			LOG.error(msg);
+			htmlElement = new HtmlGeneric(tag);
 		}
-		CMLUtil.copyAttributes(element, htmlElement);
+		XMLUtil.copyAttributes(element, htmlElement);
 		for (int i = 0; i < element.getChildCount(); i++) {
 			Node child = element.getChild(i);
 			if (child instanceof Element) {
@@ -360,8 +396,12 @@ public abstract class HtmlElement extends Element implements CMLConstants {
 		this.appendChild(content);
 	}
 	
-	public void setClass(String value) {
-		this.setAttribute("class", value);
+	public String getClassAttribute() {
+		return this.getAttributeValue(CLASS);
+	}
+
+	public void setClassAttribute(String value) {
+		this.setAttribute(CLASS, value);
 	}
 
 	public void setId(String value) {
@@ -369,15 +409,15 @@ public abstract class HtmlElement extends Element implements CMLConstants {
 	}
 
 	public void setName(String value) {
-		this.setAttribute("name", value);
+		this.setAttribute(NAME, value);
 	}
 
 	public void output(OutputStream os) throws IOException {
-		CMLUtil.debug(this, os, 1);
+		XMLUtil.debug(this, os, 1);
 	}
 
 	public void debug(String msg) {
-		CMLUtil.debug(this, msg);
+		XMLUtil.debug(this, msg);
 	}
 
 	public void setValue(String value) {
@@ -389,9 +429,14 @@ public abstract class HtmlElement extends Element implements CMLConstants {
 		return this.getAttributeValue(ID);
 	}
 
+	public String getTitle() {
+		return this.getAttributeValue(TITLE);
+	}
+
 	public static List<HtmlElement> getSelfOrDescendants(HtmlElement root, String tag) {
 		tag = tag.toLowerCase();
-		Nodes nodes = root.query(".//*[local-name()='"+tag+"'");
+		String xpath = ".//*[local-name()='"+tag+"']";
+		Nodes nodes = root.query(xpath);
 		List<HtmlElement> elements = new ArrayList<HtmlElement>();
 		for (int i = 0; i < nodes.size(); i++) {
 			elements.add((HtmlElement)nodes.get(i));

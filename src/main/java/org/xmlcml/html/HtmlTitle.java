@@ -16,39 +16,37 @@
 
 package org.xmlcml.html;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.log4j.Logger;
 
-
 /** 
- *  @author pm286
+ <thead>
+    <tr>
+      <th>Month</th>
+      <th>Savings</th>
+    </tr>
+  </thead>
+
+ * @author pm286
+ *
  */
-public class HtmlSpan extends HtmlElement {
+public class HtmlTitle extends HtmlElement {
 	@SuppressWarnings("unused")
-	private final static Logger LOG = Logger.getLogger(HtmlSpan.class);
-	public final static String TAG = "span";
+	private final static Logger LOG = Logger.getLogger(HtmlTitle.class);
+	public final static String TAG = "title";
 
 	/** constructor.
 	 * 
 	 */
-	public HtmlSpan() {
+	public HtmlTitle() {
 		super(TAG);
 	}
 	
-	/** makes a new list composed of the spans in the list
-	 * 
-	 * @param elements
-	 * @return
+	/** constructor.
+	 *
 	 */
-	public static List<HtmlSpan> extractSpans(List<HtmlElement> elements) {
-		List<HtmlSpan> spanList = new ArrayList<HtmlSpan>();
-		for (HtmlElement element : elements) {
-			if (element instanceof HtmlSpan) {
-				spanList.add((HtmlSpan) element);
-			}
-		}
-		return spanList;
+	public HtmlTitle(String content) {
+		this();
+		this.appendChild(content);
 	}
+	
 }

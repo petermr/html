@@ -33,4 +33,9 @@ public class HtmlP extends HtmlElement {
 	public HtmlP() {
 		super(TAG);
 	}
+
+	public HtmlP(String content) {
+		this();
+		this.appendChild(content);
+	}
 }

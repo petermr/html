@@ -16,15 +16,21 @@
 
 package org.xmlcml.html;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.log4j.Logger;
+import org.xmlcml.html.util.HtmlUtil;
 
 
 /** 
  *  @author pm286
  */
 public class HtmlSub extends HtmlElement {
+	
 	private final static Logger LOG = Logger.getLogger(HtmlSpan.class);
 	public final static String TAG = "sub";
+	public final static String ALL_SUB_XPATH = ".//h:sub";
 
 	/** constructor.
 	 * 
@@ -32,4 +38,30 @@ public class HtmlSub extends HtmlElement {
 	public HtmlSub() {
 		super(TAG);
 	}
+	
+	/** convenience method to extract list of HtmlSub in element
+	 * 
+	 * @param htmlElement
+	 * @return
+	 */
+	public static List<HtmlSub> extractSelfAndDescendantLines(HtmlElement htmlElement) {
+		return HtmlSub.extractSubs(HtmlUtil.getQueryHtmlElements(htmlElement, ALL_SUB_XPATH));
+	}
+
+	/** makes a new list composed of the subs in the list
+	 * 
+	 * @param elements
+	 * @return
+	 */
+	public static List<HtmlSub> extractSubs(List<HtmlElement> elements) {
+		List<HtmlSub> subList = new ArrayList<HtmlSub>();
+		for (HtmlElement element : elements) {
+			if (element instanceof HtmlSub) {
+				subList.add((HtmlSub) element);
+			}
+		}
+		return subList;
+	}
+
+	
 }

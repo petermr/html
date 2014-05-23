@@ -50,4 +50,8 @@ public class HtmlA extends HtmlElement {
 		this.setAttribute(TARGET, target.toString());
 	}
 
+	public String getHref() {
+		return this.getAttributeValue(HREF);
+	}
+
 }

@@ -16,7 +16,11 @@
 
 package org.xmlcml.html;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.log4j.Logger;
+import org.xmlcml.html.util.HtmlUtil;
 
 
 /** base class for lightweight generic SVG element.
@@ -28,6 +32,7 @@ public class HtmlTd extends HtmlElement {
 	@SuppressWarnings("unused")
 	private final static Logger LOG = Logger.getLogger(HtmlTd.class);
 	public final static String TAG = "td";
+	public final static String ALL_TD_XPATH = ".//h:td";
 
 	/** constructor.
 	 * 
@@ -46,4 +51,35 @@ public class HtmlTd extends HtmlElement {
 		return td;
 	}
 
+
+	/** convenience method to extract list of HtmlTd in element
+	 * 
+	 * @param htmlElement
+	 * @return
+	 */
+	public static List<HtmlTd> extractSelfAndDescendantTds(HtmlElement htmlElement) {
+		return HtmlTd.extractTds(HtmlUtil.getQueryHtmlElements(htmlElement, ALL_TD_XPATH));
+	}
+
+	/** makes a new list composed of the tds in the list
+	 * 
+	 * @param elements
+	 * @return
+	 */
+	public static List<HtmlTd> extractTds(List<HtmlElement> elements) {
+		List<HtmlTd> tdList = new ArrayList<HtmlTd>();
+		for (HtmlElement element : elements) {
+			if (element instanceof HtmlTd) {
+				tdList.add((HtmlTd) element);
+			}
+		}
+		return tdList;
+	}
+	
+	public static HtmlTd getFirstDescendantTd(HtmlElement htmlElement) {
+		List<HtmlTd> tds = extractSelfAndDescendantTds(htmlElement);
+		return (tds.size() == 0) ? null : tds.get(0);
+	}
+
+	
 }
