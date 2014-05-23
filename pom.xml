@@ -39,8 +39,8 @@
 
 	<inceptionYear>2007</inceptionYear>
 	<ciManagement>
-		<system>hudson</system>
-		<url>http://hudson.ch.cam.ac.uk/job/html</url>
+		<system>jenkins</system>
+		<url>http://jenkins.ch.cam.ac.uk/job/html</url>
 	</ciManagement>
 
 	<organization>
