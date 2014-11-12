@@ -2,7 +2,6 @@ package org.xmlcml.html.util;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
@@ -12,16 +11,19 @@ import nu.xom.Builder;
 import nu.xom.Document;
 import nu.xom.Element;
 import nu.xom.Nodes;
-import nu.xom.ParsingException;
-import nu.xom.ValidityException;
 import nu.xom.XPathContext;
 
+import org.apache.commons.io.IOUtils;
+import org.apache.log4j.Logger;
+import org.jsoup.Jsoup;
 import org.xmlcml.html.HtmlElement;
 import org.xmlcml.xml.XMLConstants;
 import org.xmlcml.xml.XMLUtil;
 
 public class HtmlUtil {
 
+	private final static Logger LOG = Logger.getLogger(HtmlUtil.class);
+	
     /** XPathContext for Html.
      */
     public static XPathContext XHTML_XPATH = new XPathContext("h", XMLConstants.XHTML_NS);
@@ -65,8 +67,17 @@ public class HtmlUtil {
 	}
 
 	public static HtmlElement readAndCreateElement(InputStream is) throws Exception {
-		Document doc = (is == null) ? null : new Builder().build(is);
-		HtmlElement htmlElement = (doc == null)? null : HtmlElement.create(doc.getRootElement());
+		String s = IOUtils.toString(is, "UTF-8");
+//		LOG.debug("inp: "+s);
+		org.jsoup.nodes.Document doc = Jsoup.parse(s);
+		String xmlDoc = doc.html();
+		xmlDoc = xmlDoc.replaceAll("&times;", "&#214;");
+		xmlDoc = xmlDoc.replaceAll("&deg;", "&#176;");
+		xmlDoc = xmlDoc.replaceAll("&[^;]*;", "[dummy]");
+//		LOG.debug("xdoc: "+xmlDoc+":"+xmlDoc.indexOf(""));
+		Element xmlElement = XMLUtil.parseXML(xmlDoc);
+//		LOG.debug("xml: "+xmlElement.toXML());
+		HtmlElement htmlElement = HtmlElement.create(xmlElement);
 		return htmlElement;
 	}
 

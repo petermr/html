@@ -285,7 +285,9 @@ public abstract class HtmlElement extends Element implements XMLConstants {
 		String namespaceURI = element.getNamespaceURI();
 		if (!XHTML_NS.equals(namespaceURI)) {
 			// might be SVG
-			throw new RuntimeException("Multiple Namespaces NYI "+namespaceURI);
+			if (!namespaceURI.equals("")) {
+				LOG.error("Multiple Namespaces NYI "+namespaceURI);
+			}
 		} else if(HtmlA.TAG.equalsIgnoreCase(tag)) {
 			htmlElement = new HtmlA();
 		} else if(HtmlB.TAG.equalsIgnoreCase(tag)) {
@@ -379,9 +381,13 @@ public abstract class HtmlElement extends Element implements XMLConstants {
 			Node child = element.getChild(i);
 			if (child instanceof Element) {
 				HtmlElement htmlChild = HtmlElement.create((Element)child);
-				htmlElement.appendChild(htmlChild);
+				if (htmlElement != null) {	
+					htmlElement.appendChild(htmlChild);
+				}
 			} else {
-				htmlElement.appendChild(child.copy());
+				if (htmlElement != null) {
+					htmlElement.appendChild(child.copy());
+				}
 			}
 		}
 		return htmlElement;

@@ -164,7 +164,8 @@
                 <dependency>
                         <groupId>org.jsoup</groupId>
                         <artifactId>jsoup</artifactId>
-                        <version>1.7.2</version>
+                         <version>1.7.2</version> 
+<!--                          <version>1.8.1</version> -->
                 </dependency>
         <dependency>
             <groupId>org.xml-cml</groupId>
