@@ -17,6 +17,7 @@ import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 import org.w3c.tidy.Tidy;
 import org.xmlcml.html.HtmlElement;
+import org.xmlcml.html.HtmlFactory;
 import org.xmlcml.xml.XMLUtil;
 
 /** wraps HTMLTidy and provides more options.
@@ -253,7 +254,8 @@ public class HTMLTidy {
 	
 	public HtmlElement createHtmlElement(InputStream is) throws Exception {
 		String out = tidy(is);
-		return (out == null || out.trim() == "") ? null : HtmlUtil.readAndCreateElementUsingJsoup(is);
+		HtmlFactory htmlFactory = new HtmlFactory();
+		return htmlFactory.parse(out);
 	}
 	
 	private void postTidy(StringBuilder sb) {

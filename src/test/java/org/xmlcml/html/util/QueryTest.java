@@ -2,20 +2,24 @@ package org.xmlcml.html.util;
 import java.io.File;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.xmlcml.html.HtmlElement;
-import org.xmlcml.html.util.Fixtures;
+import org.xmlcml.html.HtmlFactory;
 
 
 public class QueryTest {
 
+	public final static Logger LOG = Logger.getLogger(QueryTest.class);
 	@Test
 //	@Ignore // Jsoup fails on entities and namespaces 
+	
 	public void testQuery() throws Exception {
 
-		HtmlElement root = HtmlUtil.readAndCreateElement(new File(Fixtures.HTML_DIR, "312.html"));
+		HtmlFactory htmlFactory = new HtmlFactory();
+		HtmlElement root = htmlFactory.parse(new File(Fixtures.HTML_DIR, "312.html"));
 		List<HtmlElement> italics = HtmlUtil.getQueryHtmlElements(root, ".//*[local-name()='i']");
 		Assert.assertEquals("italics",  221, italics.size());
 		
@@ -52,16 +56,12 @@ public class QueryTest {
 				"i.e",
 		},
 		italics);
-//		for (HtmlElement italic : italics) {
-//			System.out.print(italic.getValue()+" / ");
-//		}
 	}
 
 	@Test 
-	@Ignore // fails on Jsoup
 	public void testAllItalics() throws Exception {
-		HtmlElement root = HtmlUtil.readAndCreateElement(new File(Fixtures.HTML_DIR, "multiple-joined-italics.html"));
-//		List<HtmlElement> italics = HtmlUtil.getQueryHtmlElements(root, ".//h:i");
+		HtmlFactory htmlFactory = new HtmlFactory();
+		HtmlElement root = htmlFactory.parse(new File(Fixtures.HTML_DIR, "multiple-joined-italics.html"));
 		List<HtmlElement> italics = HtmlUtil.getQueryHtmlElements(root, ".//*[local-name()='i']");
 		testItalics(new String[]{
 		

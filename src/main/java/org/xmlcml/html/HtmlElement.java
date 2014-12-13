@@ -266,6 +266,7 @@ public abstract class HtmlElement extends Element implements XMLConstants {
 	 * @param element
 	 * @return
 	 */
+	@Deprecated // use HtmlFactory
 	public static HtmlElement create(Element element) {
 		return HtmlElement.create(element, false, false);
 	}
@@ -280,16 +281,17 @@ public abstract class HtmlElement extends Element implements XMLConstants {
 	 * @param ignores namespaces (e.g. from Jsoup)
 	 * @return
 	 */
-	public static HtmlElement create(Element element, boolean abort, boolean ignoreNamespaces) {
+	@Deprecated // use HtmlFactory instead
+	private static HtmlElement create(Element element, boolean abort, boolean ignoreNamespaces) {
 		HtmlElement htmlElement = null;
 		String tag = element.getLocalName();
 		String namespaceURI = element.getNamespaceURI();
 		if (!ignoreNamespaces && !XHTML_NS.equals(namespaceURI)) {
 			// might be SVG 
 			if (!namespaceURI.equals("")) {
-				LOG.error("multiple Namespaces "+namespaceURI);
+				LOG.trace("multiple Namespaces "+namespaceURI);
 			}
-			LOG.error("Unknown namespace: "+namespaceURI);
+			LOG.trace("Unknown namespace: "+namespaceURI);
 			htmlElement = addUnknownTag(namespaceURI,tag);
 		} else if(HtmlA.TAG.equalsIgnoreCase(tag)) {
 			htmlElement = new HtmlA();
@@ -376,7 +378,7 @@ public abstract class HtmlElement extends Element implements XMLConstants {
 			if (abort) {
 				throw new RuntimeException(msg);
 			}
-			LOG.error(msg);
+			LOG.trace(msg);
 			htmlElement = addUnknownTag(namespaceURI,tag);
 		}
 		XMLUtil.copyAttributes(element, htmlElement);

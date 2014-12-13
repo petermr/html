@@ -38,7 +38,6 @@ public class HtmlTidyTest {
 		Tidy tidy = makeTidy();
 		// quoting does not happen in script
 		String s = HtmlTidyTest.createOuput(html, tidy);
-		LOG.debug(s);
 		Assert.assertEquals("out", 
 				"<html><head><title class=\"a&amp;b\">t</title><script type=\"text/javascript\"> foo < bar & plugh</script></head><body><p>a &lt; b &amp; c</p></body></html>", s);
 	}
@@ -57,6 +56,9 @@ public class HtmlTidyTest {
 	
 
 	@Test
+	/** unfortunately we cannot catch the deliberate error which therefore comes out on the error stream.
+	 * 
+	 */
 	public void testBadTag() throws IOException {
 		String html = "<html><title>t</title><meta name=\"x\" content=\"y is \"bad\" here\"><it>bad</it></html>";
 		HTMLTidy htmlTidy = new HTMLTidy();

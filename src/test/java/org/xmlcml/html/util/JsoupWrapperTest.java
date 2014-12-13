@@ -4,9 +4,12 @@ package org.xmlcml.html.util;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
+import java.net.URL;
 
 import junit.framework.Assert;
 import nu.xom.Builder;
+import nu.xom.Element;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -17,6 +20,9 @@ import org.jsoup.nodes.Document;
 import org.jsoup.safety.Whitelist;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.xmlcml.html.HtmlElement;
+import org.xmlcml.html.HtmlFactory;
+import org.xmlcml.xml.XMLUtil;
 
 public class JsoupWrapperTest {
 
@@ -125,6 +131,15 @@ public class JsoupWrapperTest {
 	
 	
 	@Test
-	public void testDoc() throws Exception {
+	public void testBMC() throws Exception {
+		URL url = new URL("http://www.biomedcentral.com/1471-2229/14/106");
+		String ss = IOUtils.toString(url.openStream());
+		HtmlFactory htmlFactory = new HtmlFactory();
+		htmlFactory.addProblemTag("script");
+		htmlFactory.addProblemTag("button");
+		htmlFactory.addMissingNamespacePrefix("g");
+		HtmlElement htmlElement = htmlFactory.parse(ss);
 	}
+
+
 }
