@@ -253,7 +253,7 @@ public class HTMLTidy {
 	
 	public HtmlElement createHtmlElement(InputStream is) throws Exception {
 		String out = tidy(is);
-		return (out == null || out.trim() == "") ? null : HtmlUtil.readAndCreateElement(is);
+		return (out == null || out.trim() == "") ? null : HtmlUtil.readAndCreateElementUsingJsoup(is);
 	}
 	
 	private void postTidy(StringBuilder sb) {

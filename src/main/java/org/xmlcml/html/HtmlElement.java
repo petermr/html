@@ -267,7 +267,7 @@ public abstract class HtmlElement extends Element implements XMLConstants {
 	 * @return
 	 */
 	public static HtmlElement create(Element element) {
-		return HtmlElement.create(element, false);
+		return HtmlElement.create(element, false, false);
 	}
 		
 	/** creates subclassed elements.
@@ -277,17 +277,20 @@ public abstract class HtmlElement extends Element implements XMLConstants {
 	 * 
 	 * @param element
 	 * @param abort 
+	 * @param ignores namespaces (e.g. from Jsoup)
 	 * @return
 	 */
-	public static HtmlElement create(Element element, boolean abort) {
+	public static HtmlElement create(Element element, boolean abort, boolean ignoreNamespaces) {
 		HtmlElement htmlElement = null;
 		String tag = element.getLocalName();
 		String namespaceURI = element.getNamespaceURI();
-		if (!XHTML_NS.equals(namespaceURI)) {
-			// might be SVG
+		if (!ignoreNamespaces && !XHTML_NS.equals(namespaceURI)) {
+			// might be SVG 
 			if (!namespaceURI.equals("")) {
-				LOG.error("Multiple Namespaces NYI "+namespaceURI);
+				LOG.error("multiple Namespaces "+namespaceURI);
 			}
+			LOG.error("Unknown namespace: "+namespaceURI);
+			htmlElement = addUnknownTag(namespaceURI,tag);
 		} else if(HtmlA.TAG.equalsIgnoreCase(tag)) {
 			htmlElement = new HtmlA();
 		} else if(HtmlB.TAG.equalsIgnoreCase(tag)) {
@@ -374,13 +377,13 @@ public abstract class HtmlElement extends Element implements XMLConstants {
 				throw new RuntimeException(msg);
 			}
 			LOG.error(msg);
-			htmlElement = new HtmlGeneric(tag);
+			htmlElement = addUnknownTag(namespaceURI,tag);
 		}
 		XMLUtil.copyAttributes(element, htmlElement);
 		for (int i = 0; i < element.getChildCount(); i++) {
 			Node child = element.getChild(i);
 			if (child instanceof Element) {
-				HtmlElement htmlChild = HtmlElement.create((Element)child);
+				HtmlElement htmlChild = HtmlElement.create((Element)child, abort, ignoreNamespaces);
 				if (htmlElement != null) {	
 					htmlElement.appendChild(htmlChild);
 				}
@@ -392,6 +395,13 @@ public abstract class HtmlElement extends Element implements XMLConstants {
 		}
 		return htmlElement;
 		
+	}
+
+	private static HtmlElement addUnknownTag(String namespaceURI, String tag) {
+		HtmlElement htmlElement;
+		htmlElement = new HtmlDiv();
+		htmlElement.addAttribute(new Attribute("class", namespaceURI+"_"+tag));
+		return htmlElement;
 	}
 	
 	public void setAttribute(String name, String value) {

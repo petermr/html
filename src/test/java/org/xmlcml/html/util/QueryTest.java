@@ -6,12 +6,13 @@ import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.xmlcml.html.HtmlElement;
+import org.xmlcml.html.util.Fixtures;
 
 
 public class QueryTest {
 
 	@Test
-	@Ignore // Jsoup fails on entities and namespaces 
+//	@Ignore // Jsoup fails on entities and namespaces 
 	public void testQuery() throws Exception {
 
 		HtmlElement root = HtmlUtil.readAndCreateElement(new File(Fixtures.HTML_DIR, "312.html"));
