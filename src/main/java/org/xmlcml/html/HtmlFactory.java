@@ -477,13 +477,11 @@ public class HtmlFactory {
 			ss = HtmlUtil.stripDOCTYPE(ss);
 		}
 		ss = insertMissingNamespacesIntoRoot(ss);
+		// do this before any unescaping as some attributes have escaped characters
+		ss = stripAttributesToDelete(ss); 
 		ss = HtmlUtil.unescapeHtml3(ss, lookupMapXML);
 		ss = HtmlUtil.replaceProblemCharacters(ss);
 		ss = stripTagsToDelete(ss);
-		LOG.trace("after tags "+ss.length());
-		ss = stripAttributesToDelete(ss);
-		LOG.trace("after attributes "+ss.length());
-		FileUtils.write(new File("target/debug/raw.xml"), ss);
 		if (useJsoup) {
 			org.jsoup.nodes.Document doc = Jsoup.parse(ss);
 			ss = doc.html();
@@ -497,9 +495,9 @@ public class HtmlFactory {
 			htmlElement = this.parse(element);
 		} catch (Exception e) {
 			e.printStackTrace();
-			File file = new File("target/debug/xml.xml");
-			LOG.error("cannot parse HTML, "+e+" wrote to file: "+file);
-			FileUtils. write(file, ss);
+			File file = new File("target/debug/htmlFactory"+System.currentTimeMillis()+".xml");
+			FileUtils.write(file, ss);
+			LOG.debug("wrote BAD XML to "+file);
 		}
 		return htmlElement;
 	}
@@ -522,7 +520,7 @@ public class HtmlFactory {
 	private String stripTagsToDelete(String ss) {
 		ensureTagToDeleteList();
 		for (String problemTag : tagToDeleteList) {
-			ss = HtmlUtil.stripJavascriptElement(ss, problemTag);
+			ss = HtmlUtil.stripElementFromTextString(ss, problemTag);
 		}
 		return ss;
 	}
@@ -536,7 +534,7 @@ public class HtmlFactory {
 	private String stripAttributesToDelete(String ss) {
 		ensureAttributeToDeleteList();
 		for (String attribute : attributeToDeleteList) {
-			ss = HtmlUtil.stripJavascriptAttribute(ss, attribute);
+			ss = HtmlUtil.stripAttributeFromText(ss, attribute);
 		}
 		return ss;
 	}

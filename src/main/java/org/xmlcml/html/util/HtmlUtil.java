@@ -252,44 +252,42 @@ public class HtmlUtil {
     private static final int MIN_ESCAPE = 2;
     private static final int MAX_ESCAPE = 6;
 
-    /** removes <tag> ... </tag> from a string.
+    /** removes foo="bar" from a string.
      * 
-     * assumes HTML contains <foo> ... </foo> bars and removes them and
+     * assumes HTML contains foo="bar" string and removes them and
      * all contained comment. Do not use for well-formed XML - it is designed
      * for awful HTML.
      * 
      * @param ss
-     * @param startTag
-     * @param endTag
-     * @return
+     * @param attributeName
+     * @return stripped string
      */
-	public static String stripJavascriptAttribute(String ss, String attribute) {
+	public static String stripAttributeFromText(String ss, String attributeName) {
 		StringBuilder sb = new StringBuilder();
 		int start = 0;
-		Matcher matcher = ATTRIBUTE.matcher(ss);
+		Pattern pattern = Pattern.compile("("+attributeName+"\\s*=\\s*\\\"[^\\\"]+\\\")");
+		Matcher matcher = pattern.matcher(ss);
 		while (matcher.find(start)) {
-			if (!matcher.matches()) {
-				sb.append(ss.substring(start));
-				break;
-			}
 			String string1 = ss.substring(start, matcher.start());
-			LOG.trace(start+"/"+matcher.start()+"/"+matcher.end());
 			sb.append(string1);
 			start = matcher.end();
 		}
+		sb.append(ss.substring(start));
 		return sb.toString();
 	}
 
-    /** removes name="..." from a string.
+    /** removes <foo>...</foo> from a string.
      * 
-     * assumes HTML contains name="..." bars and removes them and
+     * assumes HTML contains <foo ...>...</foo> and removes them and
      * all contained content. Do not use for well-formed XML - it is designed
      * for awful HTML.
      * 
      * @param ss
+     * @param tag to remove
+     * 
      * @return
      */
-	public static String stripJavascriptElement(String ss, String tag) {
+	public static String stripElementFromTextString(String ss, String tag) {
 		StringBuilder sb = new StringBuilder(ss);
 		while (true) {
 			int start = sb.indexOf("<"+tag);
