@@ -135,8 +135,8 @@ public class JsoupWrapperTest {
 		URL url = new URL("http://www.biomedcentral.com/1471-2229/14/106");
 		String ss = IOUtils.toString(url.openStream());
 		HtmlFactory htmlFactory = new HtmlFactory();
-		htmlFactory.addProblemTag("script");
-		htmlFactory.addProblemTag("button");
+		htmlFactory.addTagToDelete("script");
+		htmlFactory.addTagToDelete("button");
 		htmlFactory.addMissingNamespacePrefix("g");
 		HtmlElement htmlElement = htmlFactory.parse(ss);
 	}

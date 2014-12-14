@@ -1,24 +1,18 @@
 package org.xmlcml.html.util;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.StringWriter;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import nu.xom.Element;
 import nu.xom.Nodes;
 import nu.xom.XPathContext;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
-import org.jsoup.Jsoup;
 import org.xmlcml.html.HtmlElement;
 import org.xmlcml.html.HtmlFactory;
 import org.xmlcml.xml.XMLConstants;
@@ -34,6 +28,7 @@ public class HtmlUtil {
     /** XPathContext for Html.
      */
     public static XPathContext XHTML_XPATH = new XPathContext("h", XMLConstants.XHTML_NS);
+    public static Pattern ATTRIBUTE = Pattern.compile("\\s+([a-z]+\\s*=\\s*\\\"[^\\\"]+\\\")");
 
 	public static List<HtmlElement> getQueryHtmlElements(HtmlElement htmlElement, String xpath) {
 		List<Element> elements = XMLUtil.getQueryElements(htmlElement, xpath, XHTML_XPATH);
@@ -266,6 +261,32 @@ public class HtmlUtil {
      * @param ss
      * @param startTag
      * @param endTag
+     * @return
+     */
+	public static String stripJavascriptAttribute(String ss, String attribute) {
+		StringBuilder sb = new StringBuilder();
+		int start = 0;
+		Matcher matcher = ATTRIBUTE.matcher(ss);
+		while (matcher.find(start)) {
+			if (!matcher.matches()) {
+				sb.append(ss.substring(start));
+				break;
+			}
+			String string1 = ss.substring(start, matcher.start());
+			LOG.trace(start+"/"+matcher.start()+"/"+matcher.end());
+			sb.append(string1);
+			start = matcher.end();
+		}
+		return sb.toString();
+	}
+
+    /** removes name="..." from a string.
+     * 
+     * assumes HTML contains name="..." bars and removes them and
+     * all contained content. Do not use for well-formed XML - it is designed
+     * for awful HTML.
+     * 
+     * @param ss
      * @return
      */
 	public static String stripJavascriptElement(String ss, String tag) {

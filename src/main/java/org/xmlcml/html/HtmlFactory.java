@@ -2,6 +2,7 @@ package org.xmlcml.html;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ import java.util.Map.Entry;
 import nu.xom.Element;
 import nu.xom.Node;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
@@ -159,7 +161,8 @@ public class HtmlFactory {
 	private boolean useJsoup = true;
 	private boolean abortOnError = false;
 	private boolean ignoreNamespaces = true;
-	private List<String> problemTagList;
+	private List<String> tagToDeleteList;
+	private List<String> attributeToDeleteList;
 	private List<String> missingNamespacePrefixes;
 
 	public HtmlFactory() {
@@ -272,9 +275,20 @@ public class HtmlFactory {
 	 * 
 	 * @param tag
 	 */
-	public void addProblemTag(String tag) {
-		ensureProblemTagList();
-		this.problemTagList.add(tag);
+	public void addTagToDelete(String tag) {
+		ensureTagToDeleteList();
+		this.tagToDeleteList.add(tag);
+	}
+
+	/** remove any attributes causing problems.
+	 * 
+	 * typical examples are those that contain Javascript (e.g. onclick)
+	 * 
+	 * @param attribute
+	 */
+	public void addAttributeToDelete(String attribute) {
+		ensureAttributeToDeleteList();
+		this.attributeToDeleteList.add(attribute);
 	}
 
 	/** creates subclassed elements.
@@ -293,7 +307,9 @@ public class HtmlFactory {
 			if (abortOnError) {
 				throw new RuntimeException("Multiple Namespaces NYI "+namespaceURI);
 			} else {
-				tag = tag.replaceAll(":", "_");
+//				tag = tag.replaceAll(":", "_");
+				htmlElement = new HtmlDiv();
+				htmlElement.setClassAttribute(tag);
 			}
 		} else {
 			htmlElement = createElementFromTag(tag);
@@ -307,20 +323,25 @@ public class HtmlFactory {
 					}
 					htmlElement = createElementFromReplacement(tag);
 					if (htmlElement == null) {
-						LOG.error(msg);
+						LOG.trace(msg);
 						htmlElement = new HtmlGeneric(tag);
 					}
 				}
 			}
-			XMLUtil.copyAttributes(element, htmlElement);
-			for (int i = 0; i < element.getChildCount(); i++) {
-				Node child = element.getChild(i);
-				if (child instanceof Element) {
-					HtmlElement htmlChild = this.parse((Element)child);
-					htmlElement.appendChild(htmlChild);
+		}
+		XMLUtil.copyAttributes(element, htmlElement);
+		for (int i = 0; i < element.getChildCount(); i++) {
+			Node child = element.getChild(i);
+			if (child instanceof Element) {
+				Element childElement = (Element) child;
+				HtmlElement htmlChild = this.parse(childElement);
+				if (htmlChild == null) {
+					LOG.error("NULL child "+childElement.toXML());
 				} else {
-					htmlElement.appendChild(child.copy());
+					htmlElement.appendChild(htmlChild);
 				}
+			} else {
+				htmlElement.appendChild(child.copy());
 			}
 		}
 		return htmlElement;
@@ -458,19 +479,27 @@ public class HtmlFactory {
 		ss = insertMissingNamespacesIntoRoot(ss);
 		ss = HtmlUtil.unescapeHtml3(ss, lookupMapXML);
 		ss = HtmlUtil.replaceProblemCharacters(ss);
-		ss = stripProblemTags(ss);
+		ss = stripTagsToDelete(ss);
+		LOG.trace("after tags "+ss.length());
+		ss = stripAttributesToDelete(ss);
+		LOG.trace("after attributes "+ss.length());
+		FileUtils.write(new File("target/debug/raw.xml"), ss);
 		if (useJsoup) {
 			org.jsoup.nodes.Document doc = Jsoup.parse(ss);
 			ss = doc.html();
 		}
 		HtmlElement htmlElement = null;
+		Element element = null;
 		try {
 			// ARGH Jsoup re-escapes characters - have to turn them back again, but NOT &amp; 
 			ss = HtmlUtil.unescapeHtml3(ss, lookupMapHTML);
-			Element element = XMLUtil.parseXML(ss);
-			htmlElement = HtmlElement.create(element);
+			element = XMLUtil.parseXML(ss);
+			htmlElement = this.parse(element);
 		} catch (Exception e) {
-			LOG.error("cannot parse HTML"+e+"; "+ss, e);
+			e.printStackTrace();
+			File file = new File("target/debug/xml.xml");
+			LOG.error("cannot parse HTML, "+e+" wrote to file: "+file);
+			FileUtils. write(file, ss);
 		}
 		return htmlElement;
 	}
@@ -490,17 +519,31 @@ public class HtmlFactory {
 		return ss;
 	}
 
-	private String stripProblemTags(String ss) {
-		ensureProblemTagList();
-		for (String problemTag : problemTagList) {
+	private String stripTagsToDelete(String ss) {
+		ensureTagToDeleteList();
+		for (String problemTag : tagToDeleteList) {
 			ss = HtmlUtil.stripJavascriptElement(ss, problemTag);
 		}
 		return ss;
 	}
 
-	private void ensureProblemTagList() {
-		if (problemTagList == null) {
-			problemTagList = new ArrayList<String>();
+	private void ensureTagToDeleteList() {
+		if (tagToDeleteList == null) {
+			tagToDeleteList = new ArrayList<String>();
+		}
+	}
+
+	private String stripAttributesToDelete(String ss) {
+		ensureAttributeToDeleteList();
+		for (String attribute : attributeToDeleteList) {
+			ss = HtmlUtil.stripJavascriptAttribute(ss, attribute);
+		}
+		return ss;
+	}
+
+	private void ensureAttributeToDeleteList() {
+		if (attributeToDeleteList == null) {
+			attributeToDeleteList = new ArrayList<String>();
 		}
 	}
 
