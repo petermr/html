@@ -2,7 +2,7 @@ package org.xmlcml.html;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
@@ -18,12 +18,15 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
+import org.xmlcml.graphics.svg.SVGConstants;
+import org.xmlcml.graphics.svg.SVGElement;
 import org.xmlcml.html.util.HtmlUtil;
 import org.xmlcml.xml.XMLUtil;
 
 /** generates HtmlElement from unnamespaced Elements.
  * 
  * Allows for customisation of treatment such as substituing unusual or incorrect elements.
+ * 
  * 
  * @author pm286
  *
@@ -156,6 +159,7 @@ public class HtmlFactory {
 		DEFAULT_REPLACEMENT_MAP = new HashMap<String, String>();
 		DEFAULT_REPLACEMENT_MAP.put("it", "i"); // italic
 	}
+	
 	private Map<String, String> replacementMap;
 	private boolean stripDoctype = true;
 	private boolean useJsoup = true;
@@ -174,7 +178,7 @@ public class HtmlFactory {
 		ignoreNamespaces = true;
 		ensureReplacementMap();
 	}
-
+	
 	/**
 	 * @return the missingNamespacePrefixes
 	 */
@@ -291,6 +295,7 @@ public class HtmlFactory {
 		this.attributeToDeleteList.add(attribute);
 	}
 
+
 	/** creates subclassed elements.
 	 * 
 	 * continues, else fails;
@@ -300,51 +305,65 @@ public class HtmlFactory {
 	 * @return
 	 */
 	public HtmlElement parse(Element element) {
-		HtmlElement htmlElement = null;
+		return (HtmlElement) parse0(element);
+	}
+
+	/** creates subclassed elements.
+	 * 
+	 * continues, else fails;
+	 * 
+	 * @param element
+	 * @param abort 
+	 * @return
+	 */
+	public Element parse0(Element element) {
+		Element xmlElement = null;
 		String tag = element.getLocalName();
 		String namespaceURI = element.getNamespaceURI();
 		if (!"".equals(namespaceURI) && !HtmlElement.XHTML_NS.equals(namespaceURI)) {
-			if (abortOnError) {
+			if (SVGConstants.SVG_NAMESPACE.equals(namespaceURI)) {
+				xmlElement = SVGElement.readAndCreateSVG(element);
+			} else if (abortOnError) {
 				throw new RuntimeException("Multiple Namespaces NYI "+namespaceURI);
 			} else {
 //				tag = tag.replaceAll(":", "_");
-				htmlElement = new HtmlDiv();
-				htmlElement.setClassAttribute(tag);
+				xmlElement = new HtmlDiv();
+				((HtmlElement)xmlElement).setClassAttribute(tag);
 			}
 		} else {
-			htmlElement = createElementFromTag(tag);
-			if (htmlElement == null) {
+			xmlElement = createElementFromTag(tag);
+			if (xmlElement == null) {
 				String msg = "Unknown html tag "+tag;
 				if (HtmlElement.TAGSET.contains(tag.toUpperCase())) {
-					htmlElement = new HtmlGeneric(tag.toLowerCase());
+					xmlElement = new HtmlGeneric(tag.toLowerCase());
 				} else {
 					if (abortOnError) {
 						throw new RuntimeException(msg);
 					}
-					htmlElement = createElementFromReplacement(tag);
-					if (htmlElement == null) {
+					xmlElement = createElementFromReplacement(tag);
+					if (xmlElement == null) {
 						LOG.trace(msg);
-						htmlElement = new HtmlGeneric(tag);
+						xmlElement = new HtmlGeneric(tag);
 					}
 				}
 			}
 		}
-		XMLUtil.copyAttributes(element, htmlElement);
+		XMLUtil.copyAttributes(element, xmlElement);
 		for (int i = 0; i < element.getChildCount(); i++) {
 			Node child = element.getChild(i);
 			if (child instanceof Element) {
 				Element childElement = (Element) child;
-				HtmlElement htmlChild = this.parse(childElement);
+				Element htmlChild = this.parse0(childElement);
 				if (htmlChild == null) {
 					LOG.error("NULL child "+childElement.toXML());
 				} else {
-					htmlElement.appendChild(htmlChild);
+					xmlElement.appendChild(htmlChild);
 				}
 			} else {
-				htmlElement.appendChild(child.copy());
+				xmlElement.appendChild(child.copy());
 			}
 		}
-		return htmlElement;
+		return xmlElement;
 		
 	}
 
@@ -437,7 +456,22 @@ public class HtmlFactory {
 			htmlElement = new HtmlTt();
 		} else if(HtmlUl.TAG.equalsIgnoreCase(tag)) {
 			htmlElement = new HtmlUl();
-		}
+			
+/** HTML5
+ * article, aside, audio, bdi, canvas, command, data, datalist, details, embed, figcaption, 
+ * figure, footer, header, keygen, mark, meter, nav, output, progress, rp, rt, ruby, section,
+ * source, summary, time, track, video, wbr
+ */
+			
+/**
+ * HTML5
+ * dates and times, email, url, search, number, range, tel, color
+ */
+			
+/** HTML5 deprecations
+  * acronym, applet, basefont, big, center, dir, font, frame, frameset, isindex, noframes, strike, tt
+  */
+		} 
 		return htmlElement;
 	}
 	
@@ -473,6 +507,27 @@ public class HtmlFactory {
 
 	public HtmlElement parse(InputStream is) throws Exception {
 		String ss = IOUtils.toString(is, "UTF-8");
+		ss = parseLegacyHtmlToWellFormedXML(ss);
+		HtmlElement htmlElement = parseToXHTML(ss);
+		return htmlElement;
+	}
+
+	private HtmlElement parseToXHTML(String ss) throws IOException {
+		Element element;
+		HtmlElement htmlElement = null;
+		try {
+			element = XMLUtil.parseXML(ss);
+			htmlElement = this.parse(element);
+		} catch (Exception e) {
+//			e.printStackTrace();
+			File file = new File("target/debug/htmlFactory"+System.currentTimeMillis()+".xml");
+			FileUtils.write(file, ss);
+			LOG.debug("wrote BAD XML to "+file);
+		}
+		return htmlElement;
+	}
+
+	private String parseLegacyHtmlToWellFormedXML(String ss) {
 		if (stripDoctype) {
 			ss = HtmlUtil.stripDOCTYPE(ss);
 		}
@@ -486,20 +541,9 @@ public class HtmlFactory {
 			org.jsoup.nodes.Document doc = Jsoup.parse(ss);
 			ss = doc.html();
 		}
-		HtmlElement htmlElement = null;
-		Element element = null;
-		try {
-			// ARGH Jsoup re-escapes characters - have to turn them back again, but NOT &amp; 
-			ss = HtmlUtil.unescapeHtml3(ss, lookupMapHTML);
-			element = XMLUtil.parseXML(ss);
-			htmlElement = this.parse(element);
-		} catch (Exception e) {
-			e.printStackTrace();
-			File file = new File("target/debug/htmlFactory"+System.currentTimeMillis()+".xml");
-			FileUtils.write(file, ss);
-			LOG.debug("wrote BAD XML to "+file);
-		}
-		return htmlElement;
+		// ARGH Jsoup re-escapes characters - have to turn them back again, but NOT &amp; 
+		ss = HtmlUtil.unescapeHtml3(ss, lookupMapHTML);
+		return ss;
 	}
 
 	/** this is awful, but so is the HTML we have to process.
