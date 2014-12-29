@@ -79,31 +79,6 @@ public class HtmlUtil {
 //		return readAndCreateElementUsingJsoup(is);
 //	}
 	
-	/** NYI - headless browser .
-	 * 
-	 * @param is
-	 * @return
-	 * @throws Exception
-	 */
-	public static HtmlElement readAndCreateElementUsingHtmlUnit(URL url) throws Exception {
-		
-	    WebClient webClient = new WebClient();
-	    HtmlPage page = webClient.getPage(url.toString());
-	    String pageAsXml = page.asXml();
-	    webClient.closeAllWindows();
-		HtmlElement htmlElement = null;
-		try {
-			HtmlFactory htmlFactory = new HtmlFactory();
-			htmlFactory.setIgnoreNamespaces(true);
-			Element xmlElement = XMLUtil.parseXML(pageAsXml);
-			htmlElement = htmlFactory.parse(xmlElement);
-//			htmlElement = HtmlElement.create(xmlElement, abort, ignoreNamespaces);
-		} catch (Exception e) {
-			LOG.error("cannot parse HTML "+pageAsXml, e);
-		}
-		return htmlElement;
-	}
-
 
 //	/** parses HTML into dom if possible.
 //	 * 
@@ -148,12 +123,9 @@ public class HtmlUtil {
 	 */
 	public static HtmlElement readAndCreateElement(URL url) throws Exception {
 		LOG.debug("opening URL Stream");
-//		InputStream is = url.openStream();
-		HtmlElement htmlElement = HtmlUtil.readAndCreateElementUsingHtmlUnit(url);
-//		if (true) throw new RuntimeException("opened URL Stream: NEEDS JSOUP***");
-//		Document doc = (url == null) ? null : new Builder().build(is);
+		HtmlUnitWrapper htmlUnitWrapper = new HtmlUnitWrapper();
+		HtmlElement htmlElement = htmlUnitWrapper.readAndCreateElement(url);
 		LOG.debug("built document");
-//		HtmlElement htmlElement = (doc == null)? null : HtmlElement.create(doc.getRootElement());
 		return htmlElement;
 	}
 	
@@ -362,6 +334,26 @@ public class HtmlUtil {
 			}
 		}
 		return start;
+	}
+
+	/** some illiterate has used smart quotes for BMC namespaces.
+	 * 
+	 * substitute "\u201c and \u201d" by balanced " "
+	 * 
+	 * then add missing namespace prefix "g"
+	 * 
+	 * @param pageAsXml
+	 * @return
+	 */
+	public static String removeBMCHorror(String xmlString) {
+		String s = xmlString.replaceAll("\"\u201c", "\"");
+		s = s.replaceAll("\u201d\"", "\"");
+		if (s.length() != xmlString.length()) {
+			s = s.replaceAll("<html", "<html xmlns:g=\"http://g.foo/\"");
+			// broken buttonß
+			s = s.replaceAll("<button [^>]*[^/]>", "<button>");
+		}
+		return s;
 	}
 
 //	@Deprecated
