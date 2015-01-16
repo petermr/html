@@ -2,7 +2,6 @@ package org.xmlcml.html.util;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.safety.Whitelist;
 
 public class JsoupWrapper {
 

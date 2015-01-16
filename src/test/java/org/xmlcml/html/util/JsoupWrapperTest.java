@@ -4,12 +4,10 @@ package org.xmlcml.html.util;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.net.URL;
 
 import junit.framework.Assert;
 import nu.xom.Builder;
-import nu.xom.Element;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -22,7 +20,6 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.xmlcml.html.HtmlElement;
 import org.xmlcml.html.HtmlFactory;
-import org.xmlcml.xml.XMLUtil;
 
 public class JsoupWrapperTest {
 

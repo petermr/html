@@ -1,5 +1,7 @@
 package org.xmlcml.html.util;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.StringWriter;
 import java.net.URL;
 import java.util.ArrayList;
@@ -14,12 +16,8 @@ import nu.xom.XPathContext;
 
 import org.apache.log4j.Logger;
 import org.xmlcml.html.HtmlElement;
-import org.xmlcml.html.HtmlFactory;
 import org.xmlcml.xml.XMLConstants;
 import org.xmlcml.xml.XMLUtil;
-
-import com.gargoylesoftware.htmlunit.WebClient;
-import com.gargoylesoftware.htmlunit.html.HtmlPage;
 
 public class HtmlUtil {
 
@@ -115,6 +113,18 @@ public class HtmlUtil {
 		}
 	}
 
+	/** read file and subclass elements to HtmlElement.
+	 * 
+	 * @param file
+	 * @return
+	 * @throws Exception
+	 */
+	public static HtmlElement readAndCreateElement(File file) throws Exception {
+		LOG.debug("opening file "+file);
+		HtmlElement htmlElement = new HTMLTidy().createHtmlElement(new FileInputStream(file));
+		return htmlElement;
+	}
+	
 	/** read file and subclass elements to HtmlElement.
 	 * 
 	 * @param file

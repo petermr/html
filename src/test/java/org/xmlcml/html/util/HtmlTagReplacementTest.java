@@ -2,7 +2,6 @@ package org.xmlcml.html.util;
 
 import junit.framework.Assert;
 
-
 import org.apache.log4j.Logger;
 import org.junit.Test;
 

@@ -6,6 +6,7 @@ import java.net.URL;
 import nu.xom.Nodes;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.xmlcml.html.HtmlElement;
 import org.xmlcml.xml.XMLUtil;
@@ -44,6 +45,7 @@ public class HtmlUnitWrapperTest {
 	 * 
 	 * @throws Exception
 	 */
+	@Ignore
 	public void testHtmlUnitElsevier() throws Exception {
 		URL url = new URL("	http://www.sciencedirect.com/science/article/pii/S1055790314003923");
 		HtmlUnitWrapper htmlUnitWrapper = new HtmlUnitWrapper();
@@ -75,6 +77,7 @@ public class HtmlUnitWrapperTest {
 	 * 
 	 * @throws Exception
 	 */
+	@Ignore
 	public void testHtmlUnitElsevierNY() throws Exception {
 		URL url = new URL("	http://www.sciencedirect.com/science/article/pii/S1055790314003923?np=y");
 		HtmlUnitWrapper htmlUnitWrapper = new HtmlUnitWrapper();
