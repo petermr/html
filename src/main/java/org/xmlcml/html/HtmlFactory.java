@@ -376,7 +376,7 @@ public class HtmlFactory {
 		return htmlElement;
 	}
 
-	private HtmlElement createElementFromTag(String tag) {
+	public HtmlElement createElementFromTag(String tag) {
 		HtmlElement htmlElement = null;
 		if(HtmlA.TAG.equalsIgnoreCase(tag)) {
 			htmlElement = new HtmlA();
