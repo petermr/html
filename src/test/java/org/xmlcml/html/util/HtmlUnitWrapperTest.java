@@ -14,6 +14,7 @@ import org.xmlcml.xml.XMLUtil;
 public class HtmlUnitWrapperTest {
 
 	@Test
+	@Ignore // uses web resources
 	public void testHtmlUnitBMC() throws Exception {
 		URL url = new URL("http://www.biomedcentral.com/1471-2229/14/106");
 		HtmlUnitWrapper htmlUnitWrapper = new HtmlUnitWrapper();

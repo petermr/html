@@ -299,6 +299,10 @@ public class HtmlUtil {
      * @return
      */
 	public static String stripDOCTYPE(String ss) {
+		if (ss == null || ss.trim().length() == 0) {
+			LOG.error("Empty Html Document");
+			return "";
+		}
 		StringBuilder sb = new StringBuilder(ss);
 		int start = 0;
 		start = skipWhitespace(sb, start);

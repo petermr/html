@@ -528,19 +528,30 @@ public class HtmlFactory {
 	}
 
 	private String parseLegacyHtmlToWellFormedXML(String ss) {
+		if (ss == null || ss.trim().length() == 0) {
+			LOG.error("legacy HTML has no content");
+			return "";
+		}
+		LOG.debug("<<<<<"+ss+">>>>>");
 		if (stripDoctype) {
 			ss = HtmlUtil.stripDOCTYPE(ss);
 		}
 		ss = insertMissingNamespacesIntoRoot(ss);
+		LOG.debug("<<%%%"+ss+"%%%>>");
 		// do this before any unescaping as some attributes have escaped characters
 		ss = stripAttributesToDelete(ss); 
+		LOG.debug("<<???"+ss+"???>>");
 		ss = HtmlUtil.unescapeHtml3(ss, lookupMapXML);
+		LOG.debug("<<!!!"+ss+"!!!>>");
 		ss = HtmlUtil.replaceProblemCharacters(ss);
-		ss = stripTagsToDelete(ss);
+		LOG.debug("<<$$$"+ss+"$$$>>");
+//		ss = stripTagsToDelete(ss);
+//		LOG.debug(ss);
 		if (useJsoup) {
 			org.jsoup.nodes.Document doc = Jsoup.parse(ss);
 			ss = doc.html();
 		}
+		LOG.debug("<<JJJ"+ss+"JJJ>>");
 		// ARGH Jsoup re-escapes characters - have to turn them back again, but NOT &amp; 
 		ss = HtmlUtil.unescapeHtml3(ss, lookupMapHTML);
 		return ss;
