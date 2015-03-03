@@ -16,7 +16,11 @@
 
 package org.xmlcml.html;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.log4j.Logger;
+import org.xmlcml.html.util.HtmlUtil;
 
 
 /** HTML p element 
@@ -26,6 +30,7 @@ import org.apache.log4j.Logger;
 public class HtmlP extends HtmlElement {
 	private final static Logger LOG = Logger.getLogger(HtmlP.class);
 	public final static String TAG = "p";
+	public final static String ALL_P_XPATH = ".//h:p";
 
 	/** constructor.
 	 * 
@@ -38,4 +43,30 @@ public class HtmlP extends HtmlElement {
 		this();
 		this.appendChild(content);
 	}
+
+	/** makes a new list composed of the ps in the list
+	 * 
+	 * @param elements
+	 * @return
+	 */
+	public static List<HtmlP> extractPs(List<HtmlElement> elements) {
+		List<HtmlP> pList = new ArrayList<HtmlP>();
+		for (HtmlElement element : elements) {
+			if (element instanceof HtmlP) {
+				pList.add((HtmlP) element);
+			}
+		}
+		return pList;
+	}
+
+
+	/** convenience method to extract list of HtmlP in element
+	 * 
+	 * @param htmlElement
+	 * @return
+	 */
+	public static List<HtmlP> extractSelfAndDescendantIs(HtmlElement htmlElement) {
+		return HtmlP.extractPs(HtmlUtil.getQueryHtmlElements(htmlElement, ALL_P_XPATH));
+	}
+
 }
