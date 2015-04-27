@@ -6,7 +6,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.net.URL;
 
-import junit.framework.Assert;
 import nu.xom.Builder;
 
 import org.apache.commons.io.FileUtils;
@@ -16,6 +15,7 @@ import org.joda.time.DateTime;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.safety.Whitelist;
+import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.xmlcml.html.HtmlElement;

@@ -4,12 +4,13 @@
 
 	<modelVersion>4.0.0</modelVersion>
 
+<!-- 
 	<parent>
 		<groupId>uk.ac.cam.ch.wwmm</groupId>
 		<artifactId>wwmm-parent</artifactId>
 		<version>4</version>
 	</parent>
-
+-->
 	<groupId>org.xml-cml</groupId>
 	<artifactId>html</artifactId>
 	<version>0.2-SNAPSHOT</version>
@@ -108,6 +109,7 @@
 	</repositories>
  
 	<dependencies>
+	<!-- 
 		<dependency>
 			<groupId>org.xml-cml</groupId>
 			<artifactId>euclid</artifactId>
@@ -118,6 +120,7 @@
 			<artifactId>cmlxom</artifactId>
 			<version>3.2-SNAPSHOT</version>
 		</dependency>
+		-->
 		<dependency>
 		    <groupId>org.xml-cml</groupId>
 		    <artifactId>svg</artifactId>
@@ -131,7 +134,8 @@
 			<artifactId>xml-apis</artifactId>
 			<version>1.4.01</version> 
 		</dependency>
-		
+
+<!-- 		
 		<dependency>
 			<version>1.1-SNAPSHOT</version>
 			<groupId>org.xml-cml</groupId>
@@ -139,12 +143,6 @@
 			<scope>test</scope>
 		</dependency>
 
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.8.2</version>
-			<scope>test</scope>
-		</dependency>
 		<dependency>
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
@@ -155,6 +153,7 @@
 			<artifactId>commons-io</artifactId>
 			<version>2.0.1</version>
 		</dependency>
+		-->
 		<dependency>
 			<groupId>jtidy</groupId>
 			<artifactId>jtidy</artifactId>
@@ -165,6 +164,7 @@
 			<artifactId>tagsoup</artifactId>
 			<version>1.2</version>
 		</dependency>
+		<!-- 
         <dependency>
 			<groupId>xom</groupId>
 			<artifactId>xom</artifactId>
@@ -175,6 +175,7 @@
 			<artifactId>commons-math</artifactId>
 			<version>2.2</version>
 		</dependency>
+		-->
         <dependency>
             <groupId>org.jsoup</groupId>
             <artifactId>jsoup</artifactId>
@@ -185,12 +186,21 @@
 			<artifactId>htmlunit</artifactId>
 			<version>2.15</version>
 		</dependency>
+		<!-- 
         <dependency>
             <groupId>org.xml-cml</groupId>
             <artifactId>jumbo-testutil</artifactId>
      	    <version>1.1-SNAPSHOT</version>
             <scope>test</scope>
         </dependency>
+        -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.8.2</version>
+			<scope>test</scope>
+		</dependency>
+		
 	</dependencies>
 	<reporting>
 		<plugins>
