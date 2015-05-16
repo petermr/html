@@ -16,6 +16,9 @@
 
 package org.xmlcml.html;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.log4j.Logger;
 
 
@@ -48,4 +51,14 @@ public class HtmlHead extends HtmlElement {
 			this.appendChild(style);
 		}
 	}
+	
+	public List<HtmlMeta> getMetaElements() {
+		List<HtmlMeta> metaElements = new ArrayList<HtmlMeta>();
+		List<HtmlElement> htmlElements = getChildElements(this, HtmlMeta.TAG);
+		for (HtmlElement htmlElement : htmlElements) {
+			metaElements.add((HtmlMeta)htmlElement);
+		}
+		return metaElements;
+	}
+
 }

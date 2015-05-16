@@ -63,4 +63,24 @@ public class HtmlDiv extends HtmlElement {
 	public static List<HtmlDiv> extractSelfAndDescendantIs(HtmlElement htmlElement) {
 		return HtmlDiv.extractDivs(HtmlUtil.getQueryHtmlElements(htmlElement, ALL_DIV_XPATH));
 	}
+
+	public List<HtmlDiv> getDivChildList() {
+		List<HtmlElement> childDivs = HtmlElement.getChildElements(this, HtmlDiv.TAG);
+		LOG.debug("ch "+childDivs.size());
+		List<HtmlDiv> divList = new ArrayList<HtmlDiv>();
+		for (HtmlElement childDiv : childDivs) {
+			divList.add((HtmlDiv)childDiv);
+		}
+		LOG.debug("div ch "+divList.size());
+		return divList;
+	}
+
+	public List<HtmlP> getPList() {
+		List<HtmlElement> ps = HtmlElement.getChildElements(this, HtmlP.TAG);
+		List<HtmlP> pList = new ArrayList<HtmlP>();
+		for (HtmlElement p : ps) {
+			pList.add((HtmlP)p);
+		}
+		return pList;
+	}
 }

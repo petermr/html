@@ -27,6 +27,8 @@ import org.apache.log4j.Logger;
 public class HtmlMeta extends HtmlElement {
 	private final static Logger LOG = Logger.getLogger(HtmlMeta.class);
 	public final static String TAG = "meta";
+	private static final String CONTENT = "content";
+	private static final String NAME = "name";
 
 	private HtmlStyle style;
 	
@@ -35,6 +37,14 @@ public class HtmlMeta extends HtmlElement {
 	 */
 	public HtmlMeta() {
 		super(TAG);
+	}
+
+	public String getName() {
+		return getAttributeValue(NAME);
+	}
+
+	public String getContent() {
+		return getAttributeValue(CONTENT);
 	}
 
 }

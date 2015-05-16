@@ -70,4 +70,13 @@ public class HtmlBody extends HtmlElement {
 		return (bodys.size() == 0) ? null : bodys.get(0);
 	}
 
+	public List<HtmlDiv> getDivList() {
+		List<HtmlElement> elements = HtmlElement.getChildElements(this, HtmlDiv.TAG);
+		List<HtmlDiv> divList = new ArrayList<HtmlDiv>();
+		for (HtmlElement element : elements) {
+			divList.add((HtmlDiv) element);
+		}
+		return divList;
+	}
+
 }

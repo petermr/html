@@ -69,4 +69,13 @@ public class HtmlP extends HtmlElement {
 		return HtmlP.extractPs(HtmlUtil.getQueryHtmlElements(htmlElement, ALL_P_XPATH));
 	}
 
+	public List<HtmlSpan> getSpanList() {
+		List<HtmlElement> spans = HtmlElement.getChildElements(this, HtmlSpan.TAG);
+		List<HtmlSpan> spanList = new ArrayList<HtmlSpan>();
+		for (HtmlElement span : spans) {
+			spanList.add((HtmlSpan)span);
+		}
+		return spanList;
+	}
+
 }
