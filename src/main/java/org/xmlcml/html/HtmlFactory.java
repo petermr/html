@@ -611,7 +611,6 @@ public class HtmlFactory {
 		String ss = IOUtils.toString(is, "UTF-8");
 		ensureContentLists();
 		for (String remove : contentList) {
-			LOG.debug("remove: "+remove);
 			ss = XMLUtil.removeTags(remove, ss);
 		}
 		for (String remove : noContentList) {
