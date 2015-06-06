@@ -6,11 +6,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
+import nu.xom.Comment;
 import nu.xom.Element;
 import nu.xom.Node;
 
@@ -19,6 +23,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.xmlcml.graphics.svg.SVGConstants;
 import org.xmlcml.graphics.svg.SVGElement;
 import org.xmlcml.html.util.HtmlUtil;
@@ -147,6 +152,32 @@ public class HtmlFactory {
         {"\u00FF", "yuml"}, // �� - lowercase y, umlaut
     };
 
+	/** HTML5
+ * article, aside, audio, bdi, canvas, command, data, datalist, details, embed, figcaption, 
+ * figure, footer, header, keygen, mark, meter, nav, output, progress, rp, rt, ruby, section,
+ * source, summary, time, track, video, wbr
+ */
+			
+/**
+ * HTML5
+ * dates and times, email, url, search, number, range, tel, color
+ */
+			
+/** HTML5 deprecations
+  * acronym, applet, basefont, big, center, dir, font, frame, frameset, isindex, noframes, strike, tt
+  */
+    private static Set<String> HTML_SET;
+    static {
+    	HTML_SET = new HashSet<String>();
+    	
+    	HTML_SET.addAll(new ArrayList<String>(Arrays.asList
+    			("article, aside, audio, bdi, col, colgroup, canvas, command, data, datalist, details, embed, "
+    			+ "figcaption, figure, footer, header, keygen, mark, meter, nav, output, progress, "
+    			+ "rp, rt, ruby, section,source, summary, time, track, video, wbr, date. time, "
+    			+ "email, url, search, number, range, tel, color, acronym, applet, basefont, big, "
+    			+ "center, dir, font, frame, frameset, isindex, noframes, strike, tt".split("\\s*\\,\\s*"))));
+//    	LOG.debug(HTML_SET);
+    };
 
     static final HashMap<String, CharSequence> lookupMapXML;
     static final HashMap<String, CharSequence> lookupMapHTML;
@@ -175,6 +206,8 @@ public class HtmlFactory {
 	private List<String> tagToDeleteList;
 	private List<String> attributeToDeleteList;
 	private List<String> missingNamespacePrefixes;
+	private Set<String> unknownTags;
+	
 
 	public HtmlFactory() {
 		setDefaults();
@@ -416,14 +449,24 @@ public class HtmlFactory {
 			htmlElement = new HtmlB();
 		} else if(HtmlBig.TAG.equalsIgnoreCase(tag)) {
 			htmlElement = new HtmlBig();
+		} else if(HtmlBlockquote.TAG.equalsIgnoreCase(tag)) {
+			htmlElement = new HtmlBlockquote();
 		} else if(HtmlBody.TAG.equalsIgnoreCase(tag)) {
 			htmlElement = new HtmlBody();
 		} else if(HtmlBr.TAG.equalsIgnoreCase(tag)) {
 			htmlElement = new HtmlBr();
 		} else if(HtmlCaption.TAG.equalsIgnoreCase(tag)) {
 			htmlElement = new HtmlCaption();
+		} else if(HtmlCode.TAG.equalsIgnoreCase(tag)) {
+			htmlElement = new HtmlCode();
+		} else if(HtmlDd.TAG.equalsIgnoreCase(tag)) {
+			htmlElement = new HtmlDd();
 		} else if(HtmlDiv.TAG.equalsIgnoreCase(tag)) {
 			htmlElement = new HtmlDiv();
+		} else if(HtmlDl.TAG.equalsIgnoreCase(tag)) {
+			htmlElement = new HtmlDl();
+		} else if(HtmlDt.TAG.equalsIgnoreCase(tag)) {
+			htmlElement = new HtmlDt();
 		} else if(HtmlEm.TAG.equalsIgnoreCase(tag)) {
 			htmlElement = new HtmlEm();
 		} else if(HtmlFrame.TAG.equalsIgnoreCase(tag)) {
@@ -436,6 +479,12 @@ public class HtmlFactory {
 			htmlElement = new HtmlH2();
 		} else if(HtmlH3.TAG.equalsIgnoreCase(tag)) {
 			htmlElement = new HtmlH3();
+		} else if(HtmlH4.TAG.equalsIgnoreCase(tag)) {
+			htmlElement = new HtmlH4();
+		} else if(HtmlH5.TAG.equalsIgnoreCase(tag)) {
+			htmlElement = new HtmlH5();
+		} else if(HtmlH6.TAG.equalsIgnoreCase(tag)) {
+			htmlElement = new HtmlH6();
 		} else if(HtmlHead.TAG.equalsIgnoreCase(tag)) {
 			htmlElement = new HtmlHead();
 		} else if(HtmlHr.TAG.equalsIgnoreCase(tag)) {
@@ -446,6 +495,8 @@ public class HtmlFactory {
 			htmlElement = new HtmlI();
 		} else if(HtmlImg.TAG.equalsIgnoreCase(tag)) {
 			htmlElement = new HtmlImg();
+		} else if(HtmlLabel.TAG.equalsIgnoreCase(tag)) {
+			htmlElement = new HtmlLabel();
 		} else if(HtmlLi.TAG.equalsIgnoreCase(tag)) {
 			htmlElement = new HtmlLi();
 		} else if(HtmlLink.TAG.equalsIgnoreCase(tag)) {
@@ -478,6 +529,8 @@ public class HtmlFactory {
 			htmlElement = new HtmlTfoot();
 		} else if(HtmlThead.TAG.equalsIgnoreCase(tag)) {
 			htmlElement = new HtmlThead();
+		} else if(HtmlTitle.TAG.equalsIgnoreCase(tag)) {
+			htmlElement = new HtmlTitle();
 		} else if(HtmlTd.TAG.equalsIgnoreCase(tag)) {
 			htmlElement = new HtmlTd();
 		} else if(HtmlTh.TAG.equalsIgnoreCase(tag)) {
@@ -488,8 +541,14 @@ public class HtmlFactory {
 			htmlElement = new HtmlTt();
 		} else if(HtmlUl.TAG.equalsIgnoreCase(tag)) {
 			htmlElement = new HtmlUl();
+		} else if(HtmlUl.TAG.equalsIgnoreCase(tag)) {
+			htmlElement = new HtmlUl();
 			
-/** HTML5
+		} else if(HTML_SET.contains(tag)) {
+			LOG.warn("unsupported HTML5 tag "+tag);
+			htmlElement = new HtmlDiv();
+			htmlElement.setClassAttribute(tag);
+	/** HTML5
  * article, aside, audio, bdi, canvas, command, data, datalist, details, embed, figcaption, 
  * figure, footer, header, keygen, mark, meter, nav, output, progress, rp, rt, ruby, section,
  * source, summary, time, track, video, wbr
@@ -503,10 +562,21 @@ public class HtmlFactory {
 /** HTML5 deprecations
   * acronym, applet, basefont, big, center, dir, font, frame, frameset, isindex, noframes, strike, tt
   */
-		} 
+		} else {
+			if (unknownTags == null) unknownTags = new HashSet<String>();
+			if (!unknownTags.contains(tag)) {
+//				LOG.error("unknown tag "+tag);
+				unknownTags.add(tag);
+			}
+			htmlElement = new HtmlDiv();
+			htmlElement.setClassAttribute(tag+"_UNKNOWN");
+		}
 		return htmlElement;
 	}
 	
+	public Set<String> getUnknownTags() {
+		return unknownTags;
+	}
 
 
 	private void ensureReplacementMap() {
@@ -541,6 +611,7 @@ public class HtmlFactory {
 		String ss = IOUtils.toString(is, "UTF-8");
 		ensureContentLists();
 		for (String remove : contentList) {
+			LOG.debug("remove: "+remove);
 			ss = XMLUtil.removeTags(remove, ss);
 		}
 		for (String remove : noContentList) {
@@ -550,11 +621,17 @@ public class HtmlFactory {
 			ss = balanceElements(balance, ss);
 		}
 		ss = removeNamespacePrefixes(ss);
+		ss = removeSingleKeywords(ss);
 		ss = parseLegacyHtmlToWellFormedXML(ss);
 		ss = tidyTidyingErrors(ss);
 		HtmlElement htmlElement = parseToXHTML(ss);
 //		FileUtils.write(new File("target/debug/"+ss.length()+".html"), htmlElement.toXML());
 		return htmlElement;
+	}
+
+	private String removeSingleKeywords(String ss) {
+		ss = ss.replaceAll(" itemscope ",  " ");
+		return ss;
 	}
 
 	private void ensureContentLists() {
@@ -628,11 +705,61 @@ public class HtmlFactory {
 		ss = HtmlUtil.replaceProblemCharacters(ss);
 		if (useJsoup) {
 			org.jsoup.nodes.Document doc = Jsoup.parse(ss);
-			ss = doc.html();
+			doc = doc.normalise();
+			HtmlElement jsoupElement = createHtmlElementFromJsoup(doc);
+			ss = jsoupElement.toXML();
+			// ARGH Jsoup re-escapes characters - have to turn them back again, but NOT &amp; 
+			ss = HtmlUtil.unescapeHtml3(ss, lookupMapHTML);
 		}
-		// ARGH Jsoup re-escapes characters - have to turn them back again, but NOT &amp; 
-		ss = HtmlUtil.unescapeHtml3(ss, lookupMapHTML);
 		return ss;
+	}
+
+	private HtmlElement createHtmlElementFromJsoup(Document doc) {
+		// because the document may have comments?
+		List<org.jsoup.nodes.Element> elementList = new ArrayList<org.jsoup.nodes.Element>();
+		for (org.jsoup.nodes.Node childNode : doc.childNodes()) {
+			if (childNode instanceof org.jsoup.nodes.Element) {
+				elementList.add((org.jsoup.nodes.Element) childNode);
+			}
+		}
+		if (elementList.size() != 1) {
+			throw new RuntimeException("Document must have exactly 1 element child");
+		}
+		return createHtmlElementFromJsoupNode(elementList.get(0));
+	}
+
+	private HtmlElement createHtmlElementFromJsoupNode(org.jsoup.nodes.Element element) {
+		HtmlElement htmlElement = createElementFromTag(element.nodeName());
+		if (htmlElement == null) {
+			LOG.debug("Null element: "+element.nodeName());
+		}
+		for (org.jsoup.nodes.Node childNode : element.childNodes()) {
+			if (childNode == null) {
+				LOG.debug("Null child: ");
+				continue;
+			}
+			String name = childNode.nodeName();
+			LOG.trace("> "+name);
+			if ("#text".equals(name)) {
+				htmlElement.appendChild(childNode.toString());
+			} else if ("#document".equals(name)) {
+				LOG.debug(">doc>"+childNode.toString());
+			} else if ("#comment".equals(name)) {
+				String comment = childNode.toString();
+				// AAARGH nested "--" are illegal in well formed comments
+				comment = comment.replaceAll("\\-\\-", "\\- \\-");
+				comment = comment.replaceAll("\\r", "\\n");
+				htmlElement.appendChild(new Comment(comment));
+			} else if ("#data".equals(name)) {
+				String data = childNode.toString();
+				htmlElement.appendChild(data);
+			} else if (childNode instanceof org.jsoup.nodes.Element) {
+				htmlElement.appendChild(createHtmlElementFromJsoupNode((org.jsoup.nodes.Element)childNode));
+			} else {
+				LOG.error("cannot parse ("+name+") in: "+childNode.toString());
+			}
+		}
+		return htmlElement;
 	}
 
 	/** this is awful, but so is the HTML we have to process.

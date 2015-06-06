@@ -5,11 +5,13 @@ package org.xmlcml.html.util;
 import java.io.File;
 import java.io.FileInputStream;
 import java.net.URL;
+import java.util.Set;
 
 import nu.xom.Builder;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 import org.jsoup.Jsoup;
@@ -23,8 +25,10 @@ import org.xmlcml.html.HtmlFactory;
 
 public class JsoupWrapperTest {
 
-	private final static Logger LOG = Logger.getLogger(JsoupWrapperTest.class);
-	
+	private static final Logger LOG = Logger.getLogger(JsoupWrapperTest.class);
+	static {
+		LOG.setLevel(Level.DEBUG);
+	}
 	@Test
 	public void testJsoupClean() {
 		String s = "<html><body></html>";
@@ -60,7 +64,8 @@ public class JsoupWrapperTest {
 		Document doc = Jsoup.parse(s);
 		String ss = doc.toString();
 		ss = ss.replaceAll("[\\s\\r\\n]+", " ");
-		Assert.assertEquals("<html> <head> <meta name=\"x\" content=\"y\" /> </head> <body></body> </html>", ss);
+		// note tags not closed
+		Assert.assertEquals("<html> <head> <meta name=\"x\" content=\"y\"> </head> <body></body> </html>", ss);
 	}
 	
 	@Test
@@ -78,7 +83,7 @@ public class JsoupWrapperTest {
 		String s = "<html><meta name=\"x\" content=\"y is \"bad\" here\"><body></html>";
 		String ss = JsoupWrapper.parseAndCorrect(s);
 		ss = ss.replaceAll("[\\s\\r\\n]+", " ");
-		Assert.assertEquals("<html> <head> <meta name=\"x\" content=\"y is JUNKJUNK\" /> </head> <body></body> </html>", ss);
+		Assert.assertEquals("<html> <head> <meta name=\"x\" content=\"y is JUNKJUNK\"> </head> <body></body> </html>", ss);
 	}
 	
 	
@@ -136,6 +141,10 @@ public class JsoupWrapperTest {
 		htmlFactory.addTagToDelete("button");
 		htmlFactory.addMissingNamespacePrefix("g");
 		HtmlElement htmlElement = htmlFactory.parse(ss);
+		Set<String> unknownTags = htmlFactory.getUnknownTags();
+		Assert.assertNotNull(unknownTags);
+		LOG.debug(unknownTags);
+		Assert.assertEquals(11,  unknownTags.size());
 	}
 
 

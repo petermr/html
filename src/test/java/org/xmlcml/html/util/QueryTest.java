@@ -3,6 +3,7 @@ import java.io.File;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.eclipse.jetty.util.log.Log;
 import org.junit.Assert;
 import org.junit.Test;
 import org.xmlcml.html.HtmlElement;
@@ -19,6 +20,9 @@ public class QueryTest {
 
 		HtmlFactory htmlFactory = new HtmlFactory();
 		HtmlElement root = htmlFactory.parse(new File(Fixtures.HTML_DIR, "312.html"));
+		Assert.assertEquals(68531,  root.toXML().length());
+		List<HtmlElement> all = HtmlUtil.getQueryHtmlElements(root, ".//*");
+		Assert.assertEquals("all",  938, all.size());
 		List<HtmlElement> italics = HtmlUtil.getQueryHtmlElements(root, ".//*[local-name()='i']");
 		Assert.assertEquals("italics",  221, italics.size());
 		
