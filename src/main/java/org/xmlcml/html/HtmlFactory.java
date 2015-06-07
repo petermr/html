@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import nu.xom.Attribute;
 import nu.xom.Comment;
 import nu.xom.Element;
 import nu.xom.Node;
@@ -207,6 +208,7 @@ public class HtmlFactory {
 	private List<String> attributeToDeleteList;
 	private List<String> missingNamespacePrefixes;
 	private Set<String> unknownTags;
+	private Set<String> attNameSet;
 	
 
 	public HtmlFactory() {
@@ -729,6 +731,34 @@ public class HtmlFactory {
 
 	private HtmlElement createHtmlElementFromJsoupNode(org.jsoup.nodes.Element element) {
 		HtmlElement htmlElement = createElementFromTag(element.nodeName());
+		for (org.jsoup.nodes.Attribute attribute : element.attributes()) {
+			String attString = attribute.toString();
+			int equals = attString.indexOf("=");
+			if (equals == -1) {
+				// non-wellformed attribute
+				LOG.trace(attString);
+				continue;
+			}
+			String attName = attString.substring(0, equals);
+			try {
+				if (!attName.startsWith("xmlns") && !attName.startsWith("xml:")) {
+					try {
+						Attribute att1 = new Attribute(attName, attribute.getValue());
+						htmlElement.addAttribute(att1);
+					} catch (nu.xom.NamespaceConflictException ee) {
+						throw new RuntimeException("bad attribute: "+attString, ee);
+					}
+				}
+			} catch (nu.xom.IllegalNameException e) {
+				if (attNameSet == null) {
+					attNameSet = new HashSet<String>();
+				}
+				if (!attNameSet.contains(attName)) {
+					LOG.debug("skipped attribute ["+attString+"]");
+					attNameSet.add(attName);
+				}
+			}
+		}
 		if (htmlElement == null) {
 			LOG.debug("Null element: "+element.nodeName());
 		}
