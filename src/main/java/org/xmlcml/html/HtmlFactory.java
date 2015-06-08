@@ -447,6 +447,10 @@ public class HtmlFactory {
 		HtmlElement htmlElement = null;
 		if(HtmlA.TAG.equalsIgnoreCase(tag)) {
 			htmlElement = new HtmlA();
+		} else if(HtmlAbbr.TAG.equalsIgnoreCase(tag)) {
+			htmlElement = new HtmlAbbr();
+		} else if(HtmlArticle.TAG.equalsIgnoreCase(tag)) {
+			htmlElement = new HtmlArticle();
 		} else if(HtmlB.TAG.equalsIgnoreCase(tag)) {
 			htmlElement = new HtmlB();
 		} else if(HtmlBig.TAG.equalsIgnoreCase(tag)) {
@@ -471,6 +475,12 @@ public class HtmlFactory {
 			htmlElement = new HtmlDt();
 		} else if(HtmlEm.TAG.equalsIgnoreCase(tag)) {
 			htmlElement = new HtmlEm();
+		} else if(HtmlFigure.TAG.equalsIgnoreCase(tag)) {
+			htmlElement = new HtmlFigure();
+		} else if(HtmlFigcaption.TAG.equalsIgnoreCase(tag)) {
+			htmlElement = new HtmlFigcaption();
+		} else if(HtmlFooter.TAG.equalsIgnoreCase(tag)) {
+			htmlElement = new HtmlFooter();
 		} else if(HtmlFrame.TAG.equalsIgnoreCase(tag)) {
 			htmlElement = new HtmlFrame();
 		} else if(HtmlFrameset.TAG.equalsIgnoreCase(tag)) {
@@ -489,6 +499,8 @@ public class HtmlFactory {
 			htmlElement = new HtmlH6();
 		} else if(HtmlHead.TAG.equalsIgnoreCase(tag)) {
 			htmlElement = new HtmlHead();
+		} else if(HtmlHeader.TAG.equalsIgnoreCase(tag)) {
+			htmlElement = new HtmlHeader();
 		} else if(HtmlHr.TAG.equalsIgnoreCase(tag)) {
 			htmlElement = new HtmlHr();
 		} else if(HtmlHtml.TAG.equalsIgnoreCase(tag)) {
@@ -505,12 +517,16 @@ public class HtmlFactory {
 			htmlElement = new HtmlLink();
 		} else if(HtmlMeta.TAG.equalsIgnoreCase(tag)) {
 			htmlElement = new HtmlMeta();
+		} else if(HtmlNav.TAG.equalsIgnoreCase(tag)) {
+			htmlElement = new HtmlNav();
 		} else if(HtmlOl.TAG.equalsIgnoreCase(tag)) {
 			htmlElement = new HtmlOl();
 		} else if(HtmlP.TAG.equalsIgnoreCase(tag)) {
 			htmlElement = new HtmlP();
 		} else if(HtmlS.TAG.equalsIgnoreCase(tag)) {
 			htmlElement = new HtmlS();
+		} else if(HtmlSection.TAG.equalsIgnoreCase(tag)) {
+			htmlElement = new HtmlSection();
 		} else if(HtmlSmall.TAG.equalsIgnoreCase(tag)) {
 			htmlElement = new HtmlSmall();
 		} else if(HtmlSpan.TAG.equalsIgnoreCase(tag)) {
@@ -537,6 +553,8 @@ public class HtmlFactory {
 			htmlElement = new HtmlTd();
 		} else if(HtmlTh.TAG.equalsIgnoreCase(tag)) {
 			htmlElement = new HtmlTh();
+		} else if(HtmlTime.TAG.equalsIgnoreCase(tag)) {
+			htmlElement = new HtmlTime();
 		} else if(HtmlTr.TAG.equalsIgnoreCase(tag)) {
 			htmlElement = new HtmlTr();
 		} else if(HtmlTt.TAG.equalsIgnoreCase(tag)) {

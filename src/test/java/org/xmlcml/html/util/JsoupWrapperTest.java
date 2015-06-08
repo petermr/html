@@ -144,7 +144,7 @@ public class JsoupWrapperTest {
 		Set<String> unknownTags = htmlFactory.getUnknownTags();
 		Assert.assertNotNull(unknownTags);
 		LOG.debug(unknownTags);
-		Assert.assertEquals(11,  unknownTags.size());
+		Assert.assertEquals(10,  unknownTags.size());
 	}
 
 
