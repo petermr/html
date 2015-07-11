@@ -772,7 +772,7 @@ public class HtmlFactory {
 					attNameSet = new HashSet<String>();
 				}
 				if (!attNameSet.contains(attName)) {
-					LOG.debug("skipped attribute ["+attString+"]");
+					LOG.trace("skipped attribute ["+attString+"]");
 					attNameSet.add(attName);
 				}
 			}
