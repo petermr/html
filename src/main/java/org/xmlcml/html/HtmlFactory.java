@@ -764,7 +764,8 @@ public class HtmlFactory {
 						Attribute att1 = new Attribute(attName, attribute.getValue());
 						htmlElement.addAttribute(att1);
 					} catch (nu.xom.NamespaceConflictException ee) {
-						throw new RuntimeException("bad attribute: "+attString, ee);
+						// kludge this
+						LOG.error("bad attribute: "+attString + ee.getMessage());
 					}
 				}
 			} catch (nu.xom.IllegalNameException e) {
