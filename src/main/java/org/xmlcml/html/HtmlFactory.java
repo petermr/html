@@ -765,7 +765,7 @@ public class HtmlFactory {
 						htmlElement.addAttribute(att1);
 					} catch (nu.xom.NamespaceConflictException ee) {
 						// kludge this
-						LOG.error("bad attribute: "+attString + ee.getMessage());
+						LOG.trace("bad attribute ignored: "+attString + ee.getMessage());
 					}
 				}
 			} catch (nu.xom.IllegalNameException e) {
