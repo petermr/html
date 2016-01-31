@@ -133,6 +133,8 @@ public class JsoupWrapperTest {
 	
 	
 	@Test
+	// runs on net
+	@Ignore
 	public void testBMC() throws Exception {
 		URL url = new URL("http://www.biomedcentral.com/1471-2229/14/106");
 		String ss = IOUtils.toString(url.openStream());
@@ -142,7 +144,7 @@ public class JsoupWrapperTest {
 		htmlFactory.addMissingNamespacePrefix("g");
 		HtmlElement htmlElement = htmlFactory.parse(ss);
 		Set<String> unknownTags = htmlFactory.getUnknownTags();
-		Assert.assertNotNull(unknownTags);
+		Assert.assertTrue(unknownTags.size() >= 10);
 		LOG.debug(unknownTags);
 		Assert.assertEquals(10,  unknownTags.size());
 	}
