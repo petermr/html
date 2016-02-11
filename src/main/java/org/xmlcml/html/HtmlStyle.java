@@ -18,11 +18,15 @@ package org.xmlcml.html;
 
 import org.apache.log4j.Logger;
 
+import nu.xom.Attribute;
+
 public class HtmlStyle  extends HtmlElement {
 
 	@SuppressWarnings("unused")
 	private final static Logger LOG = Logger.getLogger(HtmlStyle.class);
 	public final static String TAG = "style";
+	private static final String TYPE = "type";
+	private static final String TEXT_CSS = "text/css";
 
 	/** constructor.
 	 * 
@@ -36,5 +40,13 @@ public class HtmlStyle  extends HtmlElement {
 		value += "\n"+cssStyle;
 		this.removeChildren();
 		this.appendChild(value);
+	}
+	
+	public void setCssType(String csstype) {
+		this.addAttribute(new Attribute(TYPE, csstype));
+	}
+	
+	public void setCssTypeDefault() {
+		this.setCssType(TEXT_CSS);
 	}
 }
