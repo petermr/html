@@ -39,7 +39,7 @@ public class HtmlHtml extends HtmlElement {
 		super(TAG);
 	}
 
-	public HtmlHead ensureHead() {
+	public HtmlElement ensureHead() {
 		if (head == null) {
 			head = new HtmlHead();
 			this.insertChild(head, 0);

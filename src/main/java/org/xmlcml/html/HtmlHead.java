@@ -18,7 +18,6 @@ package org.xmlcml.html;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.apache.log4j.Logger;
 
 
@@ -28,6 +27,7 @@ import org.apache.log4j.Logger;
  *
  */
 public class HtmlHead extends HtmlElement {
+	
 	private final static Logger LOG = Logger.getLogger(HtmlHead.class);
 	public final static String TAG = "head";
 
@@ -60,5 +60,41 @@ public class HtmlHead extends HtmlElement {
 		}
 		return metaElements;
 	}
+
+	public void addCSSStylesheetLink(String target) {
+		HtmlLink link = new HtmlLink();
+		link.setRel(STYLESHEET);
+		link.setType(TEXT_CSS);
+		link.setHref(target);
+		this.appendChild(link);
+	}
+
+	public void addTitle(String string) {
+		HtmlTitle title = new HtmlTitle(string);
+		this.appendChild(title);
+	}
+
+	public void addCssStyle(String string) {
+		HtmlStyle style = new HtmlStyle();
+		this.appendChild(style);
+		style.setCssTypeDefault();
+		style.addCss(string);
+	}
+
+	public void addJavascriptLink(String src) {
+		HtmlScript script = new HtmlScript();
+		script.setSrc(src);
+		script.setCharset(UTF_8);
+		script.setType(TEXT_JAVASCRIPT);
+		script.appendChild(" "); // bug in Chrome which doesnt like <script .../>
+		this.appendChild(script);
+	}
+
+	public void addUTF8Charset() {
+		HtmlElement meta = new HtmlMeta();
+		meta.setCharset(UTF_8);
+		this.appendChild(meta);
+	}
+
 
 }

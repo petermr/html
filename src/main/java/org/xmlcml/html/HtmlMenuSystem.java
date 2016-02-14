@@ -52,7 +52,7 @@ public class HtmlMenuSystem {
 	private String menuFilename = createMenuFilename();
 	private int menuWidth = DEFAULT_MENU_WIDTH;
 	
-	private HtmlHead head;
+	private HtmlElement head;
 	private HtmlElement body;
 	private HtmlUl ul;
 	

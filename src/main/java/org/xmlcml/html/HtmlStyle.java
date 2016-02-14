@@ -42,11 +42,11 @@ public class HtmlStyle  extends HtmlElement {
 		this.appendChild(value);
 	}
 	
-	public void setCssType(String csstype) {
-		this.addAttribute(new Attribute(TYPE, csstype));
-	}
+//	public void setCssType(String csstype) {
+//		this.addAttribute(new Attribute(TYPE, csstype));
+//	}
 	
 	public void setCssTypeDefault() {
-		this.setCssType(TEXT_CSS);
+		this.setType(TEXT_CSS);
 	}
 }

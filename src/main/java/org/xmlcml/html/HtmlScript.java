@@ -17,36 +17,27 @@
 package org.xmlcml.html;
 
 import org.apache.log4j.Logger;
-
 import nu.xom.Attribute;
 
+public class HtmlScript  extends HtmlElement {
 
-/** base class for lightweight generic SVG element.
- * no checking - i.e. can take any name or attributes
- * @author pm286
- *
- */
-public class HtmlLink extends HtmlElement {
-	private static final String REL = "rel";
-	private static final String HREF = "href";
-	private final static Logger LOG = Logger.getLogger(HtmlLink.class);
-	public final static String TAG = "link";
-
-	private HtmlStyle style;
+	@SuppressWarnings("unused")
+	private final static Logger LOG = Logger.getLogger(HtmlScript.class);
+	public final static String TAG = "script";
 	
+	private static final String SRC = "src";
+
 	/** constructor.
 	 * 
 	 */
-	public HtmlLink() {
+	public HtmlScript() {
 		super(TAG);
 	}
 
-	public void setRel(String target) {
-		this.addAttribute(new Attribute(REL, target));
+	public void setSrc(String src) {
+		if (src != null) {
+			this.addAttribute(new Attribute(SRC, src));
+		}
 	}
-
-	public void setHref(String target) {
-		this.addAttribute(new Attribute(HREF, target));
-	}
-
+	
 }

@@ -143,6 +143,14 @@ public abstract class HtmlElement extends Element implements XMLConstants {
 	private static final String ID = "id";
 	private static final String TITLE = "title";
 
+
+	public static final String STYLESHEET = "stylesheet";
+	public static final String TEXT_CSS = "text/css";
+	public static final String TEXT_JAVASCRIPT = "text/javascript";
+	public static final String UTF_8 = "UTF-8";
+	public static final String TYPE = "type";
+	private static final String CHARSET = "charset";
+
 	public static String[] tags = {
 		"A", 
 		"ABBR", 
@@ -448,6 +456,26 @@ public abstract class HtmlElement extends Element implements XMLConstants {
 
 	public String getTitle() {
 		return this.getAttributeValue(TITLE);
+	}
+
+	public void setUTF8Charset(String string) {
+		this.addAttribute(new Attribute(CHARSET, UTF_8));
+	}
+
+	public void setCharset(String charset) {
+		this.addAttribute(new Attribute(CHARSET, charset));
+	}
+
+	public void setType(String type) {
+		this.addAttribute(new Attribute(TYPE, type));
+	}
+
+	public void addJavascript(String content) {
+		HtmlScript script = new HtmlScript();
+		script.setCharset(UTF_8);
+		script.setType(TEXT_JAVASCRIPT);
+		script.appendChild(content); 
+		this.appendChild(script);
 	}
 
 	public static List<HtmlElement> getSelfOrDescendants(HtmlElement root, String tag) {
