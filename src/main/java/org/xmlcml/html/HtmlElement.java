@@ -430,6 +430,9 @@ public abstract class HtmlElement extends Element implements XMLConstants {
 	}
 
 	public void setId(String value) {
+		if (value == null) {
+			throw new RuntimeException("NULL id");
+		}
 		this.setAttribute(ID, value);
 	}
 
