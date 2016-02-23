@@ -136,17 +136,18 @@ VAR 	  	  	  	  	  	instance of a variable or program argument
  */
 public abstract class HtmlElement extends Element implements XMLConstants {
 
+
 	private final static Logger LOG = Logger.getLogger(HtmlElement.class);
 
 	private static final String NAME = "name";
 	private static final String CLASS = "class";
 	private static final String ID = "id";
-	private static final String TITLE = "title";
 
 
 	public static final String STYLESHEET = "stylesheet";
 	public static final String TEXT_CSS = "text/css";
 	public static final String TEXT_JAVASCRIPT = "text/javascript";
+	public static final String TITLE = "title";
 	public static final String UTF_8 = "UTF-8";
 	public static final String TYPE = "type";
 	private static final String CHARSET = "charset";
@@ -479,6 +480,10 @@ public abstract class HtmlElement extends Element implements XMLConstants {
 		script.setType(TEXT_JAVASCRIPT);
 		script.appendChild(content); 
 		this.appendChild(script);
+	}
+
+	public void setTitle(String title) {
+		this.addAttribute(new Attribute(TITLE, title));
 	}
 
 	public static List<HtmlElement> getSelfOrDescendants(HtmlElement root, String tag) {

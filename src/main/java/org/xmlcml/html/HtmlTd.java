@@ -45,8 +45,8 @@ public class HtmlTd extends HtmlElement {
 	 * @param content
 	 * @return
 	 */
-	public static HtmlTd createAndWrapText(String content) {
-		HtmlTd td = new HtmlTd();
+	public static HtmlElement createAndWrapText(String content) {
+		HtmlElement td = new HtmlTd();
 		td.appendChild(content);
 		return td;
 	}
@@ -76,7 +76,7 @@ public class HtmlTd extends HtmlElement {
 		return tdList;
 	}
 	
-	public static HtmlTd getFirstDescendantTd(HtmlElement htmlElement) {
+	public static HtmlElement getFirstDescendantTd(HtmlElement htmlElement) {
 		List<HtmlTd> tds = extractSelfAndDescendantTds(htmlElement);
 		return (tds.size() == 0) ? null : tds.get(0);
 	}

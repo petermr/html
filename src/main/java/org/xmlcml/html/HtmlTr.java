@@ -59,7 +59,7 @@ public class HtmlTr extends HtmlElement {
 		return tdList;
 	}
 	
-	public HtmlTd getTd(int col) {
+	public HtmlElement getTd(int col) {
 		List<HtmlTd> cells = getTdChildren();
 		return (col < 0 || col >= cells.size()) ? null : (HtmlTd) cells.get(col);
 	}
