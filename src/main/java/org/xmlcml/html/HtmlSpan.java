@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.xmlcml.html.util.HtmlUtil;
 
 
 /** 
@@ -29,6 +30,7 @@ public class HtmlSpan extends HtmlElement {
 	@SuppressWarnings("unused")
 	private final static Logger LOG = Logger.getLogger(HtmlSpan.class);
 	public final static String TAG = "span";
+	public final static String ALL_SPAN_XPATH = ".//h:span";
 
 	/** constructor.
 	 * 
@@ -51,4 +53,25 @@ public class HtmlSpan extends HtmlElement {
 		}
 		return spanList;
 	}
+
+	/** convenience method to extract list of HtmlSpan in element
+	 * 
+	 * @param htmlElement
+	 * @return
+	 */
+	public static List<HtmlSpan> extractSelfAndDescendantSpans(HtmlElement htmlElement) {
+		return HtmlSpan.extractSpans(HtmlUtil.getQueryHtmlElements(htmlElement, ALL_SPAN_XPATH));
+	}
+
+	/** convenience method to extract list of HtmlSpan in element
+	 * 
+	 * @param htmlElement
+	 * @param xpath
+	 * @return
+	 */
+
+	public static List<HtmlSpan> extractSpans(HtmlElement htmlElement, String xpath) {
+		return HtmlSpan.extractSpans(HtmlUtil.getQueryHtmlElements(htmlElement, xpath));
+	}
+
 }

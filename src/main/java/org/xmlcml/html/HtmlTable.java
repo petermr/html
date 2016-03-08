@@ -151,5 +151,17 @@ public class HtmlTable extends HtmlElement {
 		return (tables.size() == 0) ? null : tables.get(0);
 	}
 
+	/** convenience method to extract list of HtmlTables in element
+	 * 
+	 * @param htmlElement
+	 * @param xpath
+	 * @return
+	 */
+
+	public static List<HtmlTable> extractTables(HtmlElement htmlElement, String xpath) {
+		return HtmlTable.extractTables(HtmlUtil.getQueryHtmlElements(htmlElement, xpath));
+	}
+
+
 
 }

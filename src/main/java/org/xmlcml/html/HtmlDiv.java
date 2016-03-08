@@ -60,9 +60,21 @@ public class HtmlDiv extends HtmlElement {
 	 * @param htmlElement
 	 * @return
 	 */
-	public static List<HtmlDiv> extractSelfAndDescendantIs(HtmlElement htmlElement) {
+	public static List<HtmlDiv> extractSelfAndDescendantDivs(HtmlElement htmlElement) {
 		return HtmlDiv.extractDivs(HtmlUtil.getQueryHtmlElements(htmlElement, ALL_DIV_XPATH));
 	}
+
+	/** convenience method to extract list of HtmlDiv in element
+	 * 
+	 * @param htmlElement
+	 * @param xpath
+	 * @return
+	 */
+
+	public static List<HtmlDiv> extractDivs(HtmlElement htmlElement, String xpath) {
+		return HtmlDiv.extractDivs(HtmlUtil.getQueryHtmlElements(htmlElement, xpath));
+	}
+
 
 	public List<HtmlDiv> getDivChildList() {
 		List<HtmlElement> childDivs = HtmlElement.getChildElements(this, HtmlDiv.TAG);
@@ -83,4 +95,5 @@ public class HtmlDiv extends HtmlElement {
 		}
 		return pList;
 	}
+
 }
