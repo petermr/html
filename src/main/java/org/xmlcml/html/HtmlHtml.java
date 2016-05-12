@@ -39,6 +39,17 @@ public class HtmlHtml extends HtmlElement {
 		super(TAG);
 	}
 
+	/** creates a stub HTML element with HtmlHead and HtmlMetaCharset.
+	 * 
+	 * @return
+	 */
+	public static HtmlHtml createUTF8Html() {
+		HtmlHtml html = new HtmlHtml();
+		html.ensureHead().setUTF8Charset("");
+		return html;
+	}
+	
+
 	public HtmlElement ensureHead() {
 		if (head == null) {
 			head = new HtmlHead();
