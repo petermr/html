@@ -35,6 +35,7 @@ public class HtmlHtml extends HtmlElement {
 	/** constructor.
 	 * 
 	 */
+//	@Deprecated // because it doesn't require UTF-8; @see {createUTF8Html()}
 	public HtmlHtml() {
 		super(TAG);
 	}
@@ -50,7 +51,7 @@ public class HtmlHtml extends HtmlElement {
 	}
 	
 
-	public HtmlElement ensureHead() {
+	public HtmlHead ensureHead() {
 		if (head == null) {
 			head = new HtmlHead();
 			this.insertChild(head, 0);

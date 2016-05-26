@@ -642,9 +642,11 @@ public class HtmlFactory {
 		ss = removeNamespacePrefixes(ss);
 		ss = removeSingleKeywords(ss);
 		ss = parseLegacyHtmlToWellFormedXML(ss);
-		ss = tidyTidyingErrors(ss);
-		HtmlElement htmlElement = parseToXHTML(ss);
-//		FileUtils.write(new File("target/debug/"+ss.length()+".html"), htmlElement.toXML());
+		HtmlElement htmlElement = null;
+		if (ss.trim().length() > 0) {
+			ss = tidyTidyingErrors(ss);
+			htmlElement = parseToXHTML(ss);
+		}
 		return htmlElement;
 	}
 
@@ -795,9 +797,18 @@ public class HtmlFactory {
 			} else if ("#comment".equals(name)) {
 				String comment = childNode.toString();
 				// AAARGH nested "--" are illegal in well formed comments
+				// mainly <!--[if...] and other awful stuff
+				comment = comment.replaceAll("<!\\-\\-", "COMM_S");
+				comment = comment.replaceAll("\\-\\->", "COMM_E");
+				comment = comment.replaceAll("<!\\[endif]", "ENDIF");
+				comment = comment.replaceAll("\\]>", "ENDIF2");
 				comment = comment.replaceAll("\\-\\-", "\\- \\-");
 				comment = comment.replaceAll("\\r", "\\n");
-				htmlElement.appendChild(new Comment(comment));
+				try {
+					htmlElement.appendChild(new Comment(comment));
+				} catch (nu.xom.IllegalDataException e) {
+					LOG.error("Bad comment "+e.getMessage()+"; "+comment);
+				}
 			} else if ("#data".equals(name)) {
 				String data = childNode.toString();
 				htmlElement.appendChild(data);

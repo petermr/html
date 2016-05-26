@@ -125,26 +125,22 @@ public class HtmlMenuSystem {
 	}
 
 	private void makeBottom() {
-		bottom = new HtmlHtml();
-		head = new HtmlHead();
-		bottom.appendChild(head);
-		body = new HtmlBody();
-		bottom.appendChild(body);
+		bottom = HtmlHtml.createUTF8Html();
+		head = bottom.ensureHead();
+		body = bottom.ensureBody();
 		body.appendChild(bottomWelcome);
 	}
 	
 	private void makeMenu() {
-		menu = new HtmlHtml();
-		head = new HtmlHead();
-		menu.appendChild(head);
-		body = new HtmlBody();
-		menu.appendChild(body);
+		menu = HtmlHtml.createUTF8Html();
+		head = menu.ensureHead();
+		body = menu.ensureBody();
 		ensureUl();
 		body.appendChild(ul);
 	}
 	
 	private void makeIndexFrame() {
-		indexFrame = new HtmlHtml();
+		indexFrame = HtmlHtml.createUTF8Html();
 		menuFrameset = new HtmlFrameset();
 		menuFrameset.setCols(""+menuWidth+", *");
 		indexFrame.appendChild(menuFrameset);

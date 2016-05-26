@@ -36,6 +36,7 @@ public class HtmlHead extends HtmlElement {
 	/** constructor.
 	 * 
 	 */
+//	@Deprecated // use html.ensureBody()
 	public HtmlHead() {
 		super(TAG);
 	}
