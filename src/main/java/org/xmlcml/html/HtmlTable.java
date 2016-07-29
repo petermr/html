@@ -19,12 +19,11 @@ package org.xmlcml.html;
 import java.util.ArrayList;
 import java.util.List;
 
-import nu.xom.Attribute;
-import nu.xom.Element;
-import nu.xom.Nodes;
-
 import org.apache.log4j.Logger;
 import org.xmlcml.html.util.HtmlUtil;
+
+import nu.xom.Attribute;
+import nu.xom.Nodes;
 
 
 /** 

@@ -3,7 +3,6 @@ import java.io.File;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.eclipse.jetty.util.log.Log;
 import org.junit.Assert;
 import org.junit.Test;
 import org.xmlcml.html.HtmlElement;

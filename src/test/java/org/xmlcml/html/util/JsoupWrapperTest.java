@@ -83,7 +83,7 @@ public class JsoupWrapperTest {
 		String s = "<html><meta name=\"x\" content=\"y is \"bad\" here\"><body></html>";
 		String ss = JsoupWrapper.parseAndCorrect(s);
 		ss = ss.replaceAll("[\\s\\r\\n]+", " ");
-		Assert.assertEquals("<html> <head> <meta name=\"x\" content=\"y is JUNKJUNK\"> </head> <body></body> </html>", ss);
+		Assert.assertEquals("<html> <head> <meta name=\"x\" content=\"y is \" bad\" here\"> </head> <body></body> </html>", ss);
 	}
 	
 	
