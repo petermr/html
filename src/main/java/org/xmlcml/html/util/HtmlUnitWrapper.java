@@ -4,8 +4,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.net.URL;
 
-import nu.xom.Element;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.xmlcml.html.HtmlElement;
@@ -14,6 +12,8 @@ import org.xmlcml.xml.XMLUtil;
 
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
+
+import nu.xom.Element;
 
 public class HtmlUnitWrapper {
 

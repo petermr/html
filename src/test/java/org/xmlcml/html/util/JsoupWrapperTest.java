@@ -7,8 +7,6 @@ import java.io.FileInputStream;
 import java.net.URL;
 import java.util.Set;
 
-import nu.xom.Builder;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Level;
@@ -22,6 +20,8 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.xmlcml.html.HtmlElement;
 import org.xmlcml.html.HtmlFactory;
+
+import nu.xom.Builder;
 
 public class JsoupWrapperTest {
 

@@ -16,9 +16,9 @@
 
 package org.xmlcml.html;
 
-import nu.xom.Elements;
-
 import org.apache.log4j.Logger;
+
+import nu.xom.Elements;
 
 
 /** base class for lightweight generic SVG element.

@@ -8,9 +8,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import nu.xom.Document;
-import nu.xom.Element;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
@@ -19,6 +16,9 @@ import org.w3c.tidy.Tidy;
 import org.xmlcml.html.HtmlElement;
 import org.xmlcml.html.HtmlFactory;
 import org.xmlcml.xml.XMLUtil;
+
+import nu.xom.Document;
+import nu.xom.Element;
 
 /** wraps HTMLTidy and provides more options.
  * 

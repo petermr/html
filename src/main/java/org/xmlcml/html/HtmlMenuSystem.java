@@ -22,13 +22,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import nu.xom.Document;
-import nu.xom.Elements;
-
 import org.apache.log4j.Logger;
 import org.xmlcml.html.HtmlElement.Target;
 import org.xmlcml.xml.XMLConstants;
 import org.xmlcml.xml.XMLUtil;
+
+import nu.xom.Document;
+import nu.xom.Elements;
 
 
 /** base class for lightweight generic SVG element.

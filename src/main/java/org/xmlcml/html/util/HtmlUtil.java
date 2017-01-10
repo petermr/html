@@ -10,14 +10,14 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import nu.xom.Element;
-import nu.xom.Nodes;
-import nu.xom.XPathContext;
-
 import org.apache.log4j.Logger;
 import org.xmlcml.html.HtmlElement;
 import org.xmlcml.xml.XMLConstants;
 import org.xmlcml.xml.XMLUtil;
+
+import nu.xom.Element;
+import nu.xom.Nodes;
+import nu.xom.XPathContext;
 
 public class HtmlUtil {
 

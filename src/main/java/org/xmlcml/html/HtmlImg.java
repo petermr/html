@@ -16,9 +16,9 @@
 
 package org.xmlcml.html;
 
-import nu.xom.Attribute;
-
 import org.apache.log4j.Logger;
+
+import nu.xom.Attribute;
 
 
 /** 

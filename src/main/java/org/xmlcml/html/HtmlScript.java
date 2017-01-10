@@ -17,6 +17,7 @@
 package org.xmlcml.html;
 
 import org.apache.log4j.Logger;
+
 import nu.xom.Attribute;
 
 public class HtmlScript  extends HtmlElement {

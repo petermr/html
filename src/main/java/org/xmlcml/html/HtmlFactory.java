@@ -14,11 +14,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import nu.xom.Attribute;
-import nu.xom.Comment;
-import nu.xom.Element;
-import nu.xom.Node;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Level;
@@ -29,6 +24,11 @@ import org.xmlcml.graphics.svg.SVGConstants;
 import org.xmlcml.graphics.svg.SVGElement;
 import org.xmlcml.html.util.HtmlUtil;
 import org.xmlcml.xml.XMLUtil;
+
+import nu.xom.Attribute;
+import nu.xom.Comment;
+import nu.xom.Element;
+import nu.xom.Node;
 
 /** generates HtmlElement from unnamespaced Elements.
  * 

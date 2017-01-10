@@ -3,13 +3,13 @@ package org.xmlcml.html.util;
 import java.io.FileOutputStream;
 import java.net.URL;
 
-import nu.xom.Nodes;
-
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.xmlcml.html.HtmlElement;
 import org.xmlcml.xml.XMLUtil;
+
+import nu.xom.Nodes;
 
 public class HtmlUnitWrapperTest {
 
