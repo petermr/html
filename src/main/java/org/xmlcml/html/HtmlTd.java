@@ -22,6 +22,8 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.xmlcml.html.util.HtmlUtil;
 
+import nu.xom.Attribute;
+
 
 /** base class for lightweight generic SVG element.
  * no checking - i.e. can take any name or attributes
@@ -80,6 +82,14 @@ public class HtmlTd extends HtmlElement {
 		List<HtmlTd> tds = extractSelfAndDescendantTds(htmlElement);
 		return (tds.size() == 0) ? null : tds.get(0);
 	}
+	
+	public void setWidth(double imgWidth) {
+		this.setWidth(String.valueOf(imgWidth));
+	}
+	public void setWidth(String string) {
+		this.addAttribute(new Attribute(HtmlImg.WIDTH, string));
+	}
+
 
 	
 }

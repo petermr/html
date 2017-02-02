@@ -29,8 +29,11 @@ public class HtmlImg extends HtmlElement {
 
 	private final static Logger LOG = Logger.getLogger(HtmlImg.class);
 	public final static String TAG = "img";
+	
 	private static final String ALT = "alt";
+	private static final String HEIGHT = "height";
 	private static final String SRC = "src";
+	static final String WIDTH = "width";
 
 	/** constructor.
 	 * 
@@ -54,4 +57,13 @@ public class HtmlImg extends HtmlElement {
 	public String getSrc() {
 		return this.getAttributeValue(SRC);
 	}
+
+	public void setHeight(double imgHeight) {
+		this.addAttribute(new Attribute(HEIGHT, String.valueOf(imgHeight)));
+	}
+
+	public void setWidth(double imgWidth) {
+		this.addAttribute(new Attribute(WIDTH, String.valueOf(imgWidth)));
+	}
+
 }

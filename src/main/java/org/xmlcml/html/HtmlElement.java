@@ -139,9 +139,10 @@ public abstract class HtmlElement extends Element implements XMLConstants {
 
 	private final static Logger LOG = Logger.getLogger(HtmlElement.class);
 
-	private static final String NAME = "name";
 	private static final String CLASS = "class";
 	private static final String ID = "id";
+	private static final String NAME = "name";
+	private static final String STYLE = "style";
 
 
 	public static final String STYLESHEET = "stylesheet";
@@ -516,6 +517,15 @@ public abstract class HtmlElement extends Element implements XMLConstants {
 		List<HtmlElement> elements = getChildElements(root, tag);
 		return (elements.size() != 1) ? null : elements.get(0);
 	}
+
+	/** we need to build CSS style for this.
+	 * 
+	 * @param style
+	 */
+	public void setStyle(String style) {
+		this.addAttribute(new Attribute(STYLE, style));
+	}
+
 
 
 
