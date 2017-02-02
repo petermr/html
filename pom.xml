@@ -4,18 +4,17 @@
 
 	<modelVersion>4.0.0</modelVersion>
 
-<!-- 
 	<parent>
-		<groupId>uk.ac.cam.ch.wwmm</groupId>
-		<artifactId>wwmm-parent</artifactId>
-		<version>4</version>
+		<groupId>org.contentmine</groupId>
+		<artifactId>cm-parent</artifactId>
+		<version>6</version>
 	</parent>
--->
-	<groupId>org.xml-cml</groupId>
+	
+	<groupId>org.contentmine</groupId>
 	<artifactId>html</artifactId>
-	<version>0.2-SNAPSHOT</version>
+	<version>2</version>
 	<packaging>jar</packaging>
-	<name>HTML</name>
+	<name>html</name>
 	<description>A Java library for processing HTML</description>
 
 	<licenses>
@@ -38,19 +37,12 @@
 		</developer>
 	</developers>
 
-	<inceptionYear>2007</inceptionYear>
-	<ciManagement>
-		<system>jenkins</system>
-		<url>http://jenkins.ch.cam.ac.uk/job/html</url>
-	</ciManagement>
-
-	<organization>
-		<name>Peter Murray-Rust</name>
-		<url>http://blogs.ch.cam.ac.uk/pmr</url>
-	</organization>
 	<build>
+		
 		<plugins>
+			<!--
 			<plugin>
+				
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>cobertura-maven-plugin</artifactId>
 				<configuration>
@@ -96,35 +88,16 @@
 					<header>src/main/resources/header.txt</header>
 				</configuration>
 			</plugin>
+				-->
 		</plugins>
 	</build>
 
 	<!-- remove <repositories> for release to maven central -->
-	<repositories>
-		<repository>
-			<id>ucc-repo</id>
-			<name>UCC Maven Repository</name>
-			<url>https://maven.ch.cam.ac.uk/m2repo</url>
-		</repository>
-	</repositories>
- 
 	<dependencies>
-	<!-- 
 		<dependency>
-			<groupId>org.xml-cml</groupId>
-			<artifactId>euclid</artifactId>
-			<version>1.1-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>org.xml-cml</groupId>
-			<artifactId>cmlxom</artifactId>
-			<version>3.2-SNAPSHOT</version>
-		</dependency>
-		-->
-		<dependency>
-		    <groupId>org.xml-cml</groupId>
+		    <groupId>org.contentmine</groupId>
 		    <artifactId>svg</artifactId>
-		    <version>0.2-SNAPSHOT</version>
+		    <version>1</version>
 		</dependency>
 		<!--  to avoid Xerces Hell? 
 		http://stackoverflow.com/questions/17777821/maven-dependency-conflict-org-w3c-dom-elementtraversal
@@ -135,25 +108,6 @@
 			<version>1.4.01</version> 
 		</dependency>
 
-<!-- 		
-		<dependency>
-			<version>1.1-SNAPSHOT</version>
-			<groupId>org.xml-cml</groupId>
-			<artifactId>jumbo-testutil</artifactId>
-			<scope>test</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-			<version>1.2.16</version>
-		</dependency>
-		<dependency>
-			<groupId>commons-io</groupId>
-			<artifactId>commons-io</artifactId>
-			<version>2.0.1</version>
-		</dependency>
-		-->
 		<dependency>
 			<groupId>jtidy</groupId>
 			<artifactId>jtidy</artifactId>
@@ -164,18 +118,6 @@
 			<artifactId>tagsoup</artifactId>
 			<version>1.2</version>
 		</dependency>
-		<!-- 
-        <dependency>
-			<groupId>xom</groupId>
-			<artifactId>xom</artifactId>
-			<version>1.2.5</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-math</artifactId>
-			<version>2.2</version>
-		</dependency>
-		-->
         <dependency>
             <groupId>org.jsoup</groupId>
             <artifactId>jsoup</artifactId>
@@ -186,22 +128,17 @@
 			<artifactId>htmlunit</artifactId>
 			<version>2.15</version>
 		</dependency>
-		<!-- 
-        <dependency>
-            <groupId>org.xml-cml</groupId>
-            <artifactId>jumbo-testutil</artifactId>
-     	    <version>1.1-SNAPSHOT</version>
-            <scope>test</scope>
-        </dependency>
-        -->
+		<!--
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>4.8.2</version>
 			<scope>test</scope>
 		</dependency>
+			-->
 		
 	</dependencies>
+	<!--
 	<reporting>
 		<plugins>
 			<plugin>
@@ -258,4 +195,5 @@
 			</plugin>
 		</plugins>
 	</reporting>
+		-->
 </project>
