@@ -706,7 +706,7 @@ public class HtmlFactory {
 //			e.printStackTrace();
 			File file = new File("target/debug/htmlFactory"+System.currentTimeMillis()+".xml");
 			FileUtils.write(file, ss);
-			LOG.debug("wrote BAD XML to "+file);
+			LOG.error("wrote BAD XML to "+file);
 		}
 		return htmlElement;
 	}
