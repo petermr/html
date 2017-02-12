@@ -4,9 +4,15 @@
 
 	<modelVersion>4.0.0</modelVersion>
 
+	<parent>
+	<groupId>org.contentmine</groupId>
+	<artifactId>cm-parent</artifactId>
+	<version>7.0.3</version>
+	</parent>
+
 	<groupId>org.contentmine</groupId>
 	<artifactId>html</artifactId>
-	<version>2.0.1</version>
+	<version>2.0.3</version>
 	<packaging>jar</packaging>
 	<name>html</name>
 	<description>A Java library for processing HTML</description>
@@ -31,7 +37,7 @@
 	</developers>
 
 	<build>
-		
+
 		<plugins>
 		</plugins>
 	</build>
@@ -43,13 +49,13 @@
 		    <artifactId>svg</artifactId>
 		    <version>1.0.3</version>
 		</dependency>
-		<!--  to avoid Xerces Hell? 
+		<!--  to avoid Xerces Hell?
 		http://stackoverflow.com/questions/17777821/maven-dependency-conflict-org-w3c-dom-elementtraversal
 		 -->
 		<dependency>
 			<groupId>xml-apis</groupId>
 			<artifactId>xml-apis</artifactId>
-			<version>1.4.01</version> 
+			<version>1.4.01</version>
 		</dependency>
 
 		<dependency>
@@ -65,13 +71,25 @@
         <dependency>
             <groupId>org.jsoup</groupId>
             <artifactId>jsoup</artifactId>
-            <version>1.9.2</version> 
+            <version>1.9.2</version>
         </dependency>
 		<dependency>
 			<groupId>net.sourceforge.htmlunit</groupId>
 			<artifactId>htmlunit</artifactId>
 			<version>2.15</version>
 		</dependency>
-		
+
 	</dependencies>
+
+	<repositories>
+	<repository>
+			<id>cm-pom</id>
+			<url>https://raw.github.com/ContentMine/cm-pom/mvn-repo/</url>
+			<snapshots>
+					<enabled>true</enabled>
+					<updatePolicy>always</updatePolicy>
+			</snapshots>
+	</repository>
+</repositories>
+
 </project>
