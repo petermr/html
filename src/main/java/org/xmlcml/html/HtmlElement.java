@@ -17,20 +17,22 @@
     package org.xmlcml.html;
 
 import java.io.IOException;
+
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
+import org.xmlcml.graphics.svg.StyleBundle;
+import org.xmlcml.xml.XMLConstants;
+import org.xmlcml.xml.XMLUtil;
+
 import nu.xom.Attribute;
 import nu.xom.Element;
 import nu.xom.Node;
 import nu.xom.Nodes;
-
-import org.apache.log4j.Logger;
-import org.xmlcml.xml.XMLConstants;
-import org.xmlcml.xml.XMLUtil;
 
 
 /*
@@ -518,15 +520,63 @@ public abstract class HtmlElement extends Element implements XMLConstants {
 		return (elements.size() != 1) ? null : elements.get(0);
 	}
 
-	/** we need to build CSS style for this.
+	private void setAttributeOrRemoveIfNull(String attName, String attVal) {
+		if (attName == null) {
+			throw new RuntimeException("Null name for attribute");
+		} if (attVal == null) {
+			this.removeAttributeWithName(attName);
+		} else {
+			this.addAttribute(new Attribute(attName, attVal));
+		}
+	}
+
+	private void removeAttributeWithName(String name) {
+		Attribute attribute = name == null ? null : this.getAttribute(name);
+		if (attribute != null) {
+			this.removeAttribute(attribute);
+		}
+	}
+
+	/** the value should be constructed used StyleBundle
 	 * 
 	 * @param style
 	 */
 	public void setStyle(String style) {
-		this.addAttribute(new Attribute(STYLE, style));
+		setAttributeOrRemoveIfNull(STYLE, style);
 	}
 
+	public boolean isBold() {
+		return StyleBundle.isBold(this);
+	}
+	
+	public boolean isItalic() {
+		return StyleBundle.isItalic(this);
+	}
 
+	public String getFontFamily() {
+		return StyleBundle.getFontFamily(this);
+	}
 
+	public String getFill() {
+		return StyleBundle.getFill(this);
+	}
+
+	public String getStroke() {
+		return StyleBundle.getStroke(this);
+	}
+
+	public Double getStrokeWidth() {
+		return StyleBundle.getStrokeWidth(this);
+	}
+
+	public Double getOpacity() {
+		return StyleBundle.getOpacity(this);
+	}
+
+	public Double getFontSize() {
+		return StyleBundle.getFontSize(this);
+	}
+
+	
 
 }
