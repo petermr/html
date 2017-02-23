@@ -6,10 +6,10 @@ import java.io.InputStream;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
+import org.junit.Assert;
 import org.junit.Test;
 import org.w3c.tidy.Tidy;
 
-import junit.framework.Assert;
 
 public class HtmlTidyTest {
 

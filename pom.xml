@@ -4,16 +4,19 @@
 
     <modelVersion>4.0.0</modelVersion>
 
+    <properties>
+       <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+       <html.version>2.0.6</html.version>
+       <!--  upstream -->
+       <svg.version>1.0.6</svg.version>
+    </properties>
+
     <groupId>org.contentmine</groupId>
     <artifactId>html</artifactId>
-    <version>2.0.6</version>
+    <version>${html.version}</version>
     <packaging>jar</packaging>
     <name>html</name>
     <description>A Java library for processing HTML</description>
-
-    <properties>
-       <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
 
     <licenses>
         <license>
@@ -41,7 +44,7 @@
         <dependency>
             <groupId>org.contentmine</groupId>
             <artifactId>svg</artifactId>
-            <version>1.0.6</version>
+            <version>${svg.version}</version>
         </dependency>
         <!--  to avoid Xerces Hell?
         http://stackoverflow.com/questions/17777821/maven-dependency-conflict-org-w3c-dom-elementtraversal

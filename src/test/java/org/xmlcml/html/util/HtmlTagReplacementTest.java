@@ -1,9 +1,8 @@
 package org.xmlcml.html.util;
 
 import org.apache.log4j.Logger;
+import org.junit.Assert;
 import org.junit.Test;
-
-import junit.framework.Assert;
 
 public class HtmlTagReplacementTest {
 
