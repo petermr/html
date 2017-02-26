@@ -6,9 +6,9 @@
 
     <properties>
        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-       <html.version>2.0.6</html.version>
+       <html.version>2.0.7</html.version>
        <!--  upstream -->
-       <svg.version>1.0.6</svg.version>
+       <svg.version>1.0.7</svg.version>
     </properties>
 
     <groupId>org.contentmine</groupId>
