@@ -5,7 +5,6 @@
     <modelVersion>4.0.0</modelVersion>
 
     <properties>
-       <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
        <html.version>2.0.7</html.version>
        <!--  upstream -->
        <svg.version>1.0.7</svg.version>
@@ -18,14 +17,6 @@
     <name>html</name>
     <description>A Java library for processing HTML</description>
 
-    <licenses>
-        <license>
-            <name>Apache License, Version 2.0</name>
-            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-            <distribution>repo</distribution>
-        </license>
-    </licenses>
-
     <developers>
         <developer>
             <id>pm286</id>
@@ -33,11 +24,6 @@
         </developer>
     </developers>
 
-    <build>
-
-        <plugins>
-        </plugins>
-    </build>
 
     <!-- remove <repositories> for release to maven central -->
     <dependencies>
@@ -78,15 +64,5 @@
 
     </dependencies>
 
-    <repositories>
-    <repository>
-        <id>cm-pom</id>
-        <url>https://raw.github.com/ContentMine/cm-pom/mvn-repo/</url>
-        <snapshots>
-            <enabled>true</enabled>
-            <updatePolicy>always</updatePolicy>
-        </snapshots>
-    </repository>
-</repositories>
 
 </project>
