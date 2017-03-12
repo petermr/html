@@ -46,30 +46,36 @@ public class HtmlHtml extends HtmlElement {
 	 */
 	public static HtmlHtml createUTF8Html() {
 		HtmlHtml html = new HtmlHtml();
-		html.ensureHead().setUTF8Charset("");
+		html.getOrCreateHead().setUTF8Charset("");
 		return html;
 	}
 	
 
-	public HtmlHead ensureHead() {
+	public HtmlHead getOrCreateHead() {
 		if (head == null) {
-			head = new HtmlHead();
-			this.insertChild(head, 0);
+			head = getHead();
+			if (head == null) {
+				head = new HtmlHead();
+				this.insertChild(head, 0);
+			}
 		}
 		return head;
 	}
 
-	public HtmlBody ensureBody() {
+	public HtmlBody getOrCreateBody() {
 		if (body == null) {
-			body = new HtmlBody();
-			this.appendChild(body);
+			getBody();
+			if (body == null) {
+				body = new HtmlBody();
+				this.appendChild(body);
+			}
 		}
 		return body;
 	}
 	
 	public void addCSS(String cssStyle) {
-		ensureHead();
-		htmlStyle = head.getHtmlStyle(); 
+		getOrCreateHead();
+		htmlStyle = head.getOrCreateHtmlStyle();
 		htmlStyle.addCss(cssStyle);
 	}
 

@@ -42,18 +42,19 @@ public class HtmlHead extends HtmlElement {
 		super(TAG);
 	}
 
-	public HtmlStyle getHtmlStyle() {
-		ensureHtmlStyle();
-		return style;
-	}
-
-	private void ensureHtmlStyle() {
+	public HtmlStyle getOrCreateHtmlStyle() {
 		if (style == null) {
+			getStyle();
 			style = new HtmlStyle();
 			this.appendChild(style);
 		}
+		return style;
 	}
 	
+	public HtmlStyle getStyle() {
+		return (HtmlStyle) getSingleChildElement(this, HtmlStyle.TAG);
+	}
+
 	public List<HtmlMeta> getMetaElements() {
 		List<HtmlMeta> metaElements = new ArrayList<HtmlMeta>();
 		List<HtmlElement> htmlElements = getChildElements(this, HtmlMeta.TAG);
@@ -90,6 +91,28 @@ public class HtmlHead extends HtmlElement {
 		script.setType(TEXT_JAVASCRIPT);
 		script.appendChild(" "); // bug in Chrome which doesnt like <script .../>
 		this.appendChild(script);
+	}
+
+	public void addScript(String content) {
+		HtmlScript script = getOrCreateScript();
+		// bug in Chrome which doesnt like <script .../>
+		if (content.equals("")) content = " ";
+		script.setContent(content);
+		script.setCharset(UTF_8);
+		script.setType(TEXT_JAVASCRIPT);
+	}
+
+	public HtmlScript getOrCreateScript() {
+		HtmlScript script = getScript();
+		if (script == null) {
+			script = new HtmlScript();
+			this.appendChild(script);
+		}
+		return script;
+	}
+
+	private HtmlScript getScript() {
+		return (HtmlScript) getSingleChildElement(this, HtmlScript.TAG);
 	}
 
 	public void addUTF8Charset() {

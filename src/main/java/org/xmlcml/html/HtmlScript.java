@@ -19,6 +19,7 @@ package org.xmlcml.html;
 import org.apache.log4j.Logger;
 
 import nu.xom.Attribute;
+import nu.xom.Text;
 
 public class HtmlScript  extends HtmlElement {
 
@@ -40,5 +41,20 @@ public class HtmlScript  extends HtmlElement {
 			this.addAttribute(new Attribute(SRC, src));
 		}
 	}
+	
+	public void setContent(String content) {
+		addSplitLines(content);
+	}
+
+	public void addSplitLines(String content) {
+		String[] lines = content.split("\\n");
+		for (String line : lines) {
+			if (!line.trim().startsWith("//")) {
+				this.appendChild(new Text(line));
+			}
+		}
+	}
+	
+
 	
 }

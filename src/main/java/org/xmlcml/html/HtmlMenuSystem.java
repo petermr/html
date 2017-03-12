@@ -126,15 +126,15 @@ public class HtmlMenuSystem {
 
 	private void makeBottom() {
 		bottom = HtmlHtml.createUTF8Html();
-		head = bottom.ensureHead();
-		body = bottom.ensureBody();
+		head = bottom.getOrCreateHead();
+		body = bottom.getOrCreateBody();
 		body.appendChild(bottomWelcome);
 	}
 	
 	private void makeMenu() {
 		menu = HtmlHtml.createUTF8Html();
-		head = menu.ensureHead();
-		body = menu.ensureBody();
+		head = menu.getOrCreateHead();
+		body = menu.getOrCreateBody();
 		ensureUl();
 		body.appendChild(ul);
 	}
