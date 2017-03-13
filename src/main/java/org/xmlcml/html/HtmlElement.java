@@ -352,6 +352,8 @@ public abstract class HtmlElement extends Element implements XMLConstants {
 			htmlElement = new HtmlP();
 		} else if(HtmlS.TAG.equalsIgnoreCase(tag)) {
 			htmlElement = new HtmlS();
+		} else if(HtmlScript.TAG.equalsIgnoreCase(tag)) {
+			htmlElement = new HtmlScript();
 		} else if(HtmlSmall.TAG.equalsIgnoreCase(tag)) {
 			htmlElement = new HtmlSmall();
 		} else if(HtmlSpan.TAG.equalsIgnoreCase(tag)) {
