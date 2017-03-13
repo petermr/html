@@ -16,7 +16,11 @@
 
 package org.xmlcml.html;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.log4j.Logger;
+import org.xmlcml.html.util.HtmlUtil;
 
 import nu.xom.Attribute;
 import nu.xom.Text;
@@ -28,7 +32,8 @@ public class HtmlScript  extends HtmlElement {
 	public final static String TAG = "script";
 	
 	private static final String SRC = "src";
-
+	public final static String ALL_SCRIPT_XPATH = ".//h:script";
+	
 	/** constructor.
 	 * 
 	 */
@@ -42,6 +47,10 @@ public class HtmlScript  extends HtmlElement {
 		}
 	}
 	
+	public String getSrc() {
+		return this.getAttributeValue(SRC);
+	}
+	
 	public void setContent(String content) {
 		addSplitLines(content);
 	}
@@ -53,6 +62,35 @@ public class HtmlScript  extends HtmlElement {
 				this.appendChild(new Text(line));
 			}
 		}
+	}
+
+	/** makes a new list composed of the Scripts in the list
+	 * 
+	 * @param elements
+	 * @return
+	 */
+	public static List<HtmlScript> extractScripts(List<HtmlElement> elements) {
+		List<HtmlScript> scriptList = new ArrayList<HtmlScript>();
+		for (HtmlElement element : elements) {
+			if (element instanceof HtmlScript) {
+				scriptList.add((HtmlScript) element);
+			}
+		}
+		return scriptList;
+	}
+
+	/** convenience method to extract list of HtmlScript in element
+	 * 
+	 * @param htmlElement
+	 * @return
+	 */
+	public static List<HtmlScript> extractSelfAndDescendantScripts(HtmlElement htmlElement) {
+		return HtmlScript.extractScripts(HtmlUtil.getQueryHtmlElements(htmlElement, ALL_SCRIPT_XPATH));
+	}
+
+	public static HtmlScript getFirstDescendantScript(HtmlElement htmlElement) {
+		List<HtmlScript> scripts = extractSelfAndDescendantScripts(htmlElement);
+		return (scripts.size() == 0) ? null : scripts.get(0);
 	}
 	
 
