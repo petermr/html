@@ -98,4 +98,22 @@ public class HtmlTr extends HtmlElement {
 		return (trs.size() == 0) ? null : trs.get(0);
 	}
 
+	public List<String> getThCellValues() {
+		List<HtmlTh> thList = this.getThChildren();
+		List<String> strings = new ArrayList<String>();
+		for (HtmlTh th : thList) {
+			strings.add(th.getValue());
+		}
+		return strings;
+	}
+
+	public List<String> getTdCellValues() {
+		List<HtmlTd> tdList = this.getTdChildren();
+		List<String> strings = new ArrayList<String>();
+		for (HtmlTd td : tdList) {
+			strings.add(td.getValue());
+		}
+		return strings;
+	}
+
 }
