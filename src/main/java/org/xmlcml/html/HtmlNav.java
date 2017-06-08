@@ -27,7 +27,6 @@ import org.apache.log4j.Logger;
 public class HtmlNav extends HtmlElement {
 	private final static Logger LOG = Logger.getLogger(HtmlNav.class);
 	public final static String TAG = "nav";
-
 	
 	/** constructor.
 	 * 
