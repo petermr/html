@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.junit.Test;
+import org.xmlcml.euclid.util.StyledText;
 import org.xmlcml.html.HtmlElement;
 import org.xmlcml.html.HtmlFactory;
 
@@ -15,8 +16,9 @@ public class QueryTest {
 	@Test
 //	@Ignore // Jsoup fails on entities and namespaces 
 	
+	
 	public void testQuery() throws Exception {
-
+		StyledText st;
 		HtmlFactory htmlFactory = new HtmlFactory();
 		HtmlElement root = htmlFactory.parse(new File(Fixtures.HTML_DIR, "312.html"));
 		Assert.assertTrue(68531 < root.toXML().length());
@@ -284,4 +286,6 @@ public class QueryTest {
 			Assert.assertEquals(""+i,  expected[i], italics.get(i).getValue().trim());
 		}
 	}
+	
+	
 }

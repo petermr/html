@@ -7,7 +7,7 @@
     <properties>
        <html.version>2.1.0</html.version>
        <!--  upstream -->
-       <svg.version>1.1.0</svg.version>
+       <svg.version>1.1.1</svg.version>
     </properties>
 
     <groupId>org.contentmine</groupId>
