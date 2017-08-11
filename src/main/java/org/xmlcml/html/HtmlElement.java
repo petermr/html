@@ -391,7 +391,6 @@ public abstract class HtmlElement extends Element implements XMLConstants {
 			if (abort) {
 				throw new RuntimeException(msg);
 			}
-			LOG.debug(msg);
 			htmlElement = addUnknownTag(namespaceURI,tag);
 		}
 		XMLUtil.copyAttributes(element, htmlElement);

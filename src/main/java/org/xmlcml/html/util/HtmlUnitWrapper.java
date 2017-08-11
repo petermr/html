@@ -45,7 +45,7 @@ public class HtmlUnitWrapper {
 	    int l = pageAsXml.length();
 	    pageAsXml = HtmlUtil.removeBMCHorror(pageAsXml);
 	    if (l != pageAsXml.length()) {
-	    	LOG.debug("Removed BMC Horror");
+	    	LOG.trace("Removed BMC Horror");
 	    }
 	    FileUtils.write(new File("target/pageAsXml.xml"), pageAsXml);
 	    webClient.closeAllWindows();

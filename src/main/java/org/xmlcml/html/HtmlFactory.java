@@ -172,12 +172,11 @@ public class HtmlFactory {
     	HTML_SET = new HashSet<String>();
     	
     	HTML_SET.addAll(new ArrayList<String>(Arrays.asList
-    			("article, aside, audio, bdi, col, colgroup, canvas, command, data, datalist, details, embed, "
-    			+ "figcaption, figure, footer, header, keygen, mark, meter, nav, output, progress, "
-    			+ "rp, rt, ruby, section,source, summary, time, track, video, wbr, date. time, "
-    			+ "email, url, search, number, range, tel, color, acronym, applet, basefont, big, "
-    			+ "center, dir, font, frame, frameset, isindex, noframes, strike, tt".split("\\s*\\,\\s*"))));
-//    	LOG.debug(HTML_SET);
+			("article, aside, audio, bdi, col, colgroup, canvas, command, data, datalist, details, embed, "
+			+ "figcaption, figure, footer, header, keygen, mark, meter, nav, output, progress, "
+			+ "rp, rt, ruby, section,source, summary, time, track, video, wbr, date. time, "
+			+ "email, url, search, number, range, tel, color, acronym, applet, basefont, big, "
+			+ "center, dir, font, frame, frameset, isindex, noframes, strike, tt".split("\\s*\\,\\s*"))));
     };
 
     static final HashMap<String, CharSequence> lookupMapXML;
@@ -781,11 +780,10 @@ public class HtmlFactory {
 			}
 		}
 		if (htmlElement == null) {
-			LOG.debug("Null element: "+element.nodeName());
+			LOG.warn("Null element: "+element.nodeName());
 		}
 		for (org.jsoup.nodes.Node childNode : element.childNodes()) {
 			if (childNode == null) {
-				LOG.debug("Null child: ");
 				continue;
 			}
 			String name = childNode.nodeName();
@@ -793,7 +791,6 @@ public class HtmlFactory {
 			if ("#text".equals(name)) {
 				htmlElement.appendChild(childNode.toString());
 			} else if ("#document".equals(name)) {
-				LOG.debug(">doc>"+childNode.toString());
 			} else if ("#comment".equals(name)) {
 				String comment = childNode.toString();
 				// AAARGH nested "--" are illegal in well formed comments

@@ -120,7 +120,6 @@ public class HtmlUtil {
 	 * @throws Exception
 	 */
 	public static HtmlElement readAndCreateElement(File file) throws Exception {
-		LOG.debug("opening file "+file);
 		HtmlElement htmlElement = new HTMLTidy().createHtmlElement(new FileInputStream(file));
 		return htmlElement;
 	}
@@ -132,10 +131,8 @@ public class HtmlUtil {
 	 * @throws Exception
 	 */
 	public static HtmlElement readAndCreateElement(URL url) throws Exception {
-		LOG.debug("opening URL Stream");
 		HtmlUnitWrapper htmlUnitWrapper = new HtmlUnitWrapper();
 		HtmlElement htmlElement = htmlUnitWrapper.readAndCreateElement(url);
-		LOG.debug("built document");
 		return htmlElement;
 	}
 	

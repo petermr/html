@@ -78,12 +78,10 @@ public class HtmlDiv extends HtmlElement {
 
 	public List<HtmlDiv> getDivChildList() {
 		List<HtmlElement> childDivs = HtmlElement.getChildElements(this, HtmlDiv.TAG);
-		LOG.debug("ch "+childDivs.size());
 		List<HtmlDiv> divList = new ArrayList<HtmlDiv>();
 		for (HtmlElement childDiv : childDivs) {
 			divList.add((HtmlDiv)childDiv);
 		}
-		LOG.debug("div ch "+divList.size());
 		return divList;
 	}
 

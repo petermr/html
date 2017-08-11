@@ -69,14 +69,11 @@ public class HTMLTidy {
     	// FIXME
     	org.w3c.tidy.Node doc = tidy.parse(bais, baos);
     	byte[] bytes = baos.toByteArray();
-    	LOG.debug("made bytes: "+bytes.length);
     	Document document = null;
     	try {
     		FileUtils.writeByteArrayToFile(new File("target/htmlIn"+new DateTime().getMillisOfDay()+".html"), bytes);
     		ByteArrayInputStream bais1 = new ByteArrayInputStream(bytes);
-        	LOG.debug("parsing...");
     		document = XMLUtil.parseQuietlyToDocument(bais1);
-        	LOG.debug("parsed bytes");
     	} catch (RuntimeException e) {
     		FileUtils.writeByteArrayToFile(new File("target/badhtmlIn"+new DateTime().getMillisOfDay()+".html"), bytesin);
     		FileUtils.writeByteArrayToFile(new File("target/badhtml"+new DateTime().getMillisOfDay()+".html"), bytes);

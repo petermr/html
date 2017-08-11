@@ -145,7 +145,7 @@ public class JsoupWrapperTest {
 		HtmlElement htmlElement = htmlFactory.parse(ss);
 		Set<String> unknownTags = htmlFactory.getUnknownTags();
 		Assert.assertTrue(unknownTags.size() >= 10);
-		LOG.debug(unknownTags);
+		LOG.info(unknownTags);
 		Assert.assertEquals(10,  unknownTags.size());
 	}
 
